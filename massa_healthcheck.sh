@@ -13,7 +13,7 @@ do
 	    fi
 
         date=$(date +"%H:%M")
-        echo "Last Update: ${date} \n"
+        echo "Last Update: ${date}"
         printf "Sleep 15 minutes\n"
         sleep 5s
 done
