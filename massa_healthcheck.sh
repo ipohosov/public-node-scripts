@@ -1,5 +1,5 @@
 #!/bin/bash
-#Thank's for https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa_healthcheck.sh
+#Thank's for ipohosov. Donates - TZ7pxizxodsy8J52D5FZzQFp3X5DSpyB1X
 
 
 cd $HOME
