@@ -14,5 +14,5 @@ do
         date=$(date +"%H:%M")
         echo "Last Update: ${date}"
         printf "Sleep 15 minutes\n"
-        sleep 5s
+        sleep 15m
 done
