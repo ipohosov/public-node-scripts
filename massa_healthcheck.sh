@@ -6,7 +6,7 @@ cd $HOME
 while true
 do
         printf "Check massa logs \n"
-        if [ $(journalctl -n 5 -u massa --no-pager | grep -c "final_state hash at slot") -lt 5 ]; then
+        if [ $(journalctl -n 5 -u massa --no-pager | grep -c "final_state hash at slot") -lt 1 ]; then
             printf "Restart massa \n"
             sudo systemctl restart massa
 	    fi
