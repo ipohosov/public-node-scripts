@@ -5,7 +5,7 @@
 cd $HOME
 while true
 do
-        printf "Check massa logs"
+        printf "Check massa logs \n"
         if [ $(journalctl -n 5 -u massa --no-pager | grep -c "final_state hash at slot") < 5 ]; then
 		    printf "Restart massa"
             printf "\n"
@@ -13,8 +13,7 @@ do
 	    fi
 
         date=$(date +"%H:%M")
-        echo "Last Update: ${date}"
-        printf "Sleep 15 minutes"
-        sleep 1m
-        printf "\n"
+        echo "Last Update: ${date} \n"
+        printf "Sleep 15 minutes\n"
+        sleep 5s
 done
