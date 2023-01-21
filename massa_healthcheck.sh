@@ -9,7 +9,7 @@ do
         if [ echo $(journalctl -n 5 -u massa --no-pager | grep -c "final_state hash at slot") < 1 ]; then
 		    printf "Restart massa"
             printf "\n"
-            systemctl restart massa
+            sudo systemctl restart massa
 	    fi
 
         date=$(date +"%H:%M")
