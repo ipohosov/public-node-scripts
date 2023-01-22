@@ -7,8 +7,12 @@ while true
 do
         printf "Check massa logs \n"
         if [ $(journalctl -n 20 -u massa --no-pager | grep -c "final_state hash at slot") -lt 1 ]; then
-            printf "Restart massa ...................................\n"
-            sudo systemctl restart massa
+            printf "Stop massa ...................................\n"
+            sudo systemctl stop massa
+            printf "Wait 5 minutes\n"
+            sleep 5m
+            printf "Start massa ...................................\n"
+            sudo systemctl start massa
 	    fi
 
         date=$(date +"%H:%M")
