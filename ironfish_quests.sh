@@ -104,7 +104,6 @@ function GetBinaryFunc() {
     echo ${BINARY}
 }
 
-
 cd $HOME
 apt install bc -y
 
@@ -114,9 +113,12 @@ GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
 if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
     FaucetFunc
 fi
-
-MintFunc
-BurnFunc
-SendFunc
+if [ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]; then
+    MintFunc
+    BurnFunc
+    SendFunc
+else
+    echo "Not enough balance. Looks like faucet doesn't work at that moment."
+    echo "Minimum required: \$IRON 0.00000003, but you have only: \$IRON $(GetBalanceFunc)."
 
 echo -e "with love by @ipohosov."
