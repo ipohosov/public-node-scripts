@@ -66,7 +66,7 @@ function CheckResultFunc() {
             echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
             WALLET_BALANCE=$(GetBalanceFunc)
             echo -e "Wallet balance: ${WALLET_BALANCE}."
-            while [[ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]]; do
+            while [[ $(echo "${WALLET_BALANCE} < 0.00000003" | bc ) -eq 1 ]]; do
                 echo -e "Waiting..."
                 sleep 15
                 WALLET_BALANCE=$(GetBalanceFunc)
