@@ -24,7 +24,7 @@ function wait_completed_transaction() {
 
     TRANSACTION_STATUS="unconfirmed."
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]]; do
-        TRANSACTION_STATUS=$(${BIN} wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
+        TRANSACTION_STATUS=$(docker exec -it ironfish wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
         if [[ ${TRANSACTION_STATUS} != "confirmed" ]]; then
             echo -e "hash: ${HASH}, transaction status: ${TRANSACTION_STATUS}."
             sleep 10
@@ -37,7 +37,7 @@ function wait_completed_transaction() {
 
 function get_balance() {
     echo 'get_balance'
-    ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
+    docker exec -it ironfish wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
 }
 
 
@@ -64,7 +64,7 @@ function check_result() {
 function mint_asset() {
     echo 'mint_asset'
     echo ${IRONFISH_GRAFFITI}
-    RESULT=$(echo "Y" | ${BIN} wallet:mint --name=${IRONFISH_GRAFFITI} --metadata=${IRONFISH_GRAFFITI}  --amount=100 --fee=0.00000001 | tr -d '\0')
+    RESULT=$(echo "Y" | docker exec -it ironfish wallet:mint --name=${IRONFISH_GRAFFITI} --metadata=${IRONFISH_GRAFFITI}  --amount=100 --fee=0.00000001 | tr -d '\0')
 
     echo ${RESULT}
 
@@ -74,7 +74,7 @@ function mint_asset() {
 
 function burn_asset() {
     echo 'burn_asset'
-    RESULT=$(echo "Y" | ${BIN} wallet:burn --assetId=${IDENTIFIER} --amount=50 --fee=0.00000001 | tr -d '\0')
+    RESULT=$(echo "Y" | docker exec -it ironfish wallet:burn --assetId=${IDENTIFIER} --amount=50 --fee=0.00000001 | tr -d '\0')
     check_result "BURN ASSET" "${RESULT}"
 }
 
@@ -82,7 +82,7 @@ function burn_asset() {
 function send_asset() {
     echo 'send_asset'
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
-    RESULT=$(echo "Y" | ${BIN} wallet:send --assetId=${IDENTIFIER} --amount 50 --to ${ADDRESS_TO_SEND} --memo "${IRONFISH_GRAFFITI}" --fee=0.00000001 | tr -d '\0')
+    RESULT=$(echo "Y" | docker exec -it ironfish wallet:send --assetId=${IDENTIFIER} --amount 50 --to ${ADDRESS_TO_SEND} --memo "${IRONFISH_GRAFFITI}" --fee=0.00000001 | tr -d '\0')
     check_result "SEND ASSET" "${RESULT}"
 }
 
@@ -127,22 +127,13 @@ function wait_successfull_transaction() {
 }
 
 
-function get_binary() {
-    echo 'get_binary'
-	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
-	BINARY="docker exec -i ${DOCKER_CONTAINER} ironfish"
-	echo ${BINARY}
-}
-
-
 cd $HOME
 while true
 do
 	source .profile
     apt install bc -y
-	BIN=$(get_binary)
-    IRONFISH_GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
-
+    IRONFISH_GRAFFITI=$(echo $(docker exec -it ironfish config:get blockGraffiti) | sed 's/\"//g')
+    echo 'Graffiti ${IRONFISH_GRAFFITI}'
 	if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
         DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 		download_scripts
