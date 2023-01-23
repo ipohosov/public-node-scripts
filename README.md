@@ -26,23 +26,14 @@ tmux kill-session -t massa_healthcheck
 ```
 echo 'export IRONFISH_EMAIL=your_email' >> $HOME/.profile
 ```
-
-2. Install tmux:
+2. Add alias to your .profile if you skipped it during installation:
 ```
-apt install tmux -y
+echo "alias ironfish='docker exec ironfish ./bin/run'" >> ~/.profile
 ```
-3. Start tmux session:
+3. Execute cript
 ```
-tmux new-session -d -s ironfish_quests 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_quests.sh)'
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_quests.sh)
 ```
-4. Remove session
-```
-tmux kill-session -t ironfish_quests
-```
-
-### 3. ironfish_faucet
-
-This script is helpful for script ironfish_quests. It's copied and executed inside docker container.
 
 
 ## Usefull commands

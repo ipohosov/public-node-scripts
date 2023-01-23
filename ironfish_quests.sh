@@ -1,9 +1,7 @@
-#!/bin/bash
-# big thanks @cyberomanov for some code
+#/usr/bin/bash
+# Thanks @cyberomanov
 
-
-function wait_completed_transaction() {
-    echo 'wait_completed_transaction'
+function WaitTransactionToBeCompleted() {
     HASH=${1}
 
     TRANSACTION_STATUS="unconfirmed."
@@ -19,53 +17,68 @@ function wait_completed_transaction() {
 }
 
 
-function get_balance() {
-    echo 'get_balance'
+function GetBalanceFunc() {
     ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
 }
 
 
-function mint_asset() {
-    echo 'mint_asset'
-    RESULT=$(echo "Y" | ${BIN} wallet:mint --name=${IRONFISH_GRAFFITI} --metadata=${IRONFISH_GRAFFITI}  --amount=100 --fee=0.00000001 | tr -d '\0')
-    check_result "MINT ASSET" "${RESULT}"
+function MintFunc() {
+    RESULT=$(echo "Y" | ${BIN} wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001 > /dev/null 2>&1)
+    CheckResultFunc "MINT" "${RESULT}"
 }
 
 
-function burn_asset() {
-    echo 'burn_asset'
-    RESULT=$(echo "Y" | ${BIN} wallet:burn --assetId=${IDENTIFIER} --amount=50 --fee=0.00000001 | tr -d '\0')
-    check_result "BURN ASSET" "${RESULT}"
+function BurnFunc() {
+    RESULT=$(echo "Y" | ${BIN} wallet:burn --assetId=${IDENTIFIER} --amount=500 --fee=0.00000001 &>/dev/null)
+    CheckResultFunc "BURN" "${RESULT}"
 }
 
 
-function send_asset() {
-    echo 'send_asset'
+function SendFunc() {
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
-    RESULT=$(echo "Y" | ${BIN} wallet:send --assetId=${IDENTIFIER} --amount 50 --to ${ADDRESS_TO_SEND} --memo "${IRONFISH_GRAFFITI}" --fee=0.00000001 | tr -d '\0')
-    check_result "SEND ASSET" "${RESULT}"
+    RESULT=$(echo "Y" | ${BIN} wallet:send --assetId=${IDENTIFIER} --amount 500 --to ${ADDRESS_TO_SEND} --memo "${GRAFFITI}" --fee=0.00000001 > /dev/null 2>&1) 
+    CheckResultFunc "SEND" "${RESULT}"
 }
 
 
-function get_transaction_hash() {
-    echo 'get_transaction_hash'
+function FaucetFunc() {
+    RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet &>/dev/null)
+    CheckResultFunc "FAUCET" "${RESULT}"
+}
+
+
+function GetTransactionHashFunc() {
     INPUT=${1}
     HASH=$(echo ${INPUT} | grep -Eo "Transaction Hash: [a-z0-9]*" | sed "s/Transaction Hash: //")
     echo ${HASH}
 }
 
 
-function check_result() {
-    echo 'check_result'
+function CheckResultFunc() {
     FUNC_RESULT="fail"
 
     FUNCTION_NAME=${1}
     FUNCTION_RESULT=${2}
 
-    if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
+    if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
+        if [[ ${FUNCTION_RESULT} == *"Congratulations! The Iron Fish Faucet just added your request to the queue!"* ]]; then
+            FUNC_RESULT="success"
+            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
+            WALLET_BALANCE=$(GetBalanceFunc)
+            echo -e "Wallet balance: ${WALLET_BALANCE}."
+            while [[ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]]; do
+                echo -e "Waiting..."
+                sleep 15
+                WALLET_BALANCE=$(GetBalanceFunc)
+                echo -e "Wallet balance: ${WALLET_BALANCE}."
+            done
+        else
+            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL | #${FUNC_TRY} ] ///////////////////\n${FUNCTION_RESULT}"
+        fi
+    elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
         echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
-        wait_completed_transaction $(get_transaction_hash "${FUNCTION_RESULT}")
+        WaitTransactionToBeCompleted $(GetTransactionHashFunc "${FUNCTION_RESULT}")
 
         if [[ ${FUNCTION_NAME} == "MINT" ]]; then
             IDENTIFIER=$(echo ${RESULT} | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
@@ -76,8 +89,7 @@ function check_result() {
 }
 
 
-function wait_successfull_transaction() {
-    echo 'wait_successfull_transaction'
+function TryUntilSuccessFunc() {
     FUNCTION=${1}
 
     FUNC_RESULT="fail"
@@ -91,7 +103,7 @@ function wait_successfull_transaction() {
 }
 
 
-function get_binary() {
+function GetBinaryFunc() {
     BINARY=$(which ironfish)
     if [[ ${BINARY} == "" ]]; then
         DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
@@ -106,43 +118,18 @@ function get_binary() {
 }
 
 
-function download_scripts() {
-    echo 'download_scripts'
-	rm -rf $HOME/ironfish-scripts
-	mkdir $HOME/ironfish-scripts
-	
-	wget -q -O $HOME/ironfish-scripts/faucet.sh https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_faucet.sh
-	chmod u+x $HOME/ironfish-scripts/faucet.sh
-}
-
-function copy_files_to_container() {
-    echo 'copy_files_to_container'
-	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
-	docker cp ./ironfish-scripts/faucet.sh $DOCKER_CONTAINER:/usr/src/app/faucet.sh
-	docker cp ./.profile $DOCKER_CONTAINER:/usr/src/app/.ironfish_profile
-}
-
 cd $HOME
-while true
-do
-	source .profile
-    BIN=$(get_binary)
-    IRONFISH_GRAFFITI=$(echo ${BIN} config | grep blockGraffiti | awk -F'"' '{ print $4 }')
-    echo ${IRONFISH_GRAFFITI}
-	if [ $(get_balance) -lt "0.00000003" ]; then
-        DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
-		download_scripts
-		copy_files_to_container
-		docker exec -it ${DOCKER_CONTAINER} sh faucet.sh
-        rm -rf ironfish-scripts
-	fi
-	wait_successfull_transaction "mint_asset"
-	wait_successfull_transaction "burn_asset"
-	wait_successfull_transaction "send_asset"
-	
-	date=$(date +"%H:%M")
-	echo "Last Update: ${date}"
-	printf "Sleep 3.5 days\n"
-	printf "with love by @ipohosov.\n"
-	sleep 3.5d
-done
+apt install bc -y
+
+BIN=$(GetBinaryFunc)
+GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
+
+if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
+    TryUntilSuccessFunc "FaucetFunc"
+fi
+
+TryUntilSuccessFunc "MintFunc"
+TryUntilSuccessFunc "BurnFunc"
+TryUntilSuccessFunc "SendFunc"
+
+echo -e "with love by @ipohosov."
