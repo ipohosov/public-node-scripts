@@ -47,7 +47,6 @@ function check_result() {
 
     FUNCTION_NAME=${1}
     FUNCTION_RESULT=${2}
-    echo ${FUNCTION_RESULT}
 
     if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
@@ -66,6 +65,9 @@ function mint_asset() {
     echo 'mint_asset'
     echo ${IRONFISH_GRAFFITI}
     RESULT=$(echo "Y" | ${BIN} wallet:mint --name=${IRONFISH_GRAFFITI} --metadata=${IRONFISH_GRAFFITI}  --amount=100 --fee=0.00000001 | tr -d '\0')
+
+    echo ${RESULT}
+
     check_result "MINT ASSET" "${RESULT}"
 }
 
