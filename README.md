@@ -33,7 +33,7 @@ apt install tmux -y
 ```
 3. Start tmux session:
 ```
-tmux new-session -d -s ironfish_quests 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa_healthcheck.sh)'
+tmux new-session -d -s ironfish_quests 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_quests.sh)'
 ```
 4. Remove session
 ```
