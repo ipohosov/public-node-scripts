@@ -1,22 +1,6 @@
 #!/bin/bash
 # big thanks @cyberomanov for some code
 
-exists()
-{
-  command -v "$1" >/dev/null 2>&1
-}
-
-if exists curl; then
-	echo ''
-else
-  sudo apt install curl -y < "/dev/null"
-fi
-
-bash_profile=$HOME/.bash_profile
-if [ -f "$bash_profile" ]; then
-    . $HOME/.bash_profile
-fi
-
 
 function wait_completed_transaction() {
     echo 'wait_completed_transaction'
@@ -41,33 +25,9 @@ function get_balance() {
 }
 
 
-function check_result() {
-    echo 'check_result'
-    FUNC_RESULT="fail"
-
-    FUNCTION_NAME=${1}
-    FUNCTION_RESULT=${2}
-
-    if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
-        FUNC_RESULT="success"
-        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
-        wait_completed_transaction $(get_transaction_hash "${FUNCTION_RESULT}")
-
-        if [[ ${FUNCTION_NAME} == "MINT" ]]; then
-            IDENTIFIER=$(echo ${RESULT} | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
-        fi
-    else
-        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL | #${FUNC_TRY} ] ///////////////////\n${FUNCTION_RESULT}"
-    fi
-}
-
 function mint_asset() {
     echo 'mint_asset'
-    echo ${IRONFISH_GRAFFITI}
     RESULT=$(echo "Y" | docker exec -it ironfish wallet:mint --name=${IRONFISH_GRAFFITI} --metadata=${IRONFISH_GRAFFITI}  --amount=100 --fee=0.00000001 | tr -d '\0')
-
-    echo ${RESULT}
-
     check_result "MINT ASSET" "${RESULT}"
 }
 
@@ -95,20 +55,24 @@ function get_transaction_hash() {
 }
 
 
-function download_scripts() {
-    echo 'download_scripts'
-	rm -rf $HOME/ironfish-scripts
-	mkdir $HOME/ironfish-scripts
-	
-	wget -q -O $HOME/ironfish-scripts/faucet.sh https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_faucet.sh
-	chmod u+x $HOME/ironfish-scripts/faucet.sh
-}
+function check_result() {
+    echo 'check_result'
+    FUNC_RESULT="fail"
 
-function copy_files_to_container() {
-    echo 'copy_files_to_container'
-	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
-	docker cp ./ironfish-scripts/faucet.sh $DOCKER_CONTAINER:/usr/src/app/faucet.sh
-	docker cp ./.profile $DOCKER_CONTAINER:/usr/src/app/.ironfish_profile
+    FUNCTION_NAME=${1}
+    FUNCTION_RESULT=${2}
+
+    if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
+        FUNC_RESULT="success"
+        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
+        wait_completed_transaction $(get_transaction_hash "${FUNCTION_RESULT}")
+
+        if [[ ${FUNCTION_NAME} == "MINT" ]]; then
+            IDENTIFIER=$(echo ${RESULT} | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
+        fi
+    else
+        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL | #${FUNC_TRY} ] ///////////////////\n${FUNCTION_RESULT}"
+    fi
 }
 
 
@@ -127,24 +91,56 @@ function wait_successfull_transaction() {
 }
 
 
+function get_binary() {
+    BINARY=$(which ironfish)
+    if [[ ${BINARY} == "" ]]; then
+        DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
+        DOCKER_TEST=$(docker exec -it ${DOCKER_CONTAINER} ironfish)
+        if [[ ${DOCKER_TEST} == *"Error"* ]]; then
+            echo "i don't know where is your 'ironfish' binary. set it manually."
+        else
+            BINARY="docker exec -i ${DOCKER_CONTAINER} ironfish"
+        fi
+    fi
+    echo ${BINARY}
+}
+
+
+function download_scripts() {
+    echo 'download_scripts'
+	rm -rf $HOME/ironfish-scripts
+	mkdir $HOME/ironfish-scripts
+	
+	wget -q -O $HOME/ironfish-scripts/faucet.sh https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_faucet.sh
+	chmod u+x $HOME/ironfish-scripts/faucet.sh
+}
+
+function copy_files_to_container() {
+    echo 'copy_files_to_container'
+	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
+	docker cp ./ironfish-scripts/faucet.sh $DOCKER_CONTAINER:/usr/src/app/faucet.sh
+	docker cp ./.profile $DOCKER_CONTAINER:/usr/src/app/.ironfish_profile
+}
+
 cd $HOME
 while true
 do
 	source .profile
     apt install bc -y
-    IRONFISH_GRAFFITI=$(echo $(docker exec -it ironfish config:get blockGraffiti) | sed 's/\"//g')
-    echo 'Graffiti ${IRONFISH_GRAFFITI}'
+    BIN=$(GetBinaryFunc)
+    GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
+    echo 'Graffiti ${IRONFISH_GRAFFITI} '
 	if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
         DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 		download_scripts
 		copy_files_to_container
 		docker exec -it ${DOCKER_CONTAINER} sh faucet.sh
+        rm -rf ironfish-scripts
 	fi
 	wait_successfull_transaction "mint_asset"
 	wait_successfull_transaction "burn_asset"
 	wait_successfull_transaction "send_asset"
-	rm -rf ironfish-scripts
-
+	
 	date=$(date +"%H:%M")
 	echo "Last Update: ${date}"
 	printf "Sleep 3.5 days\n"
