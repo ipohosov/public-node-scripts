@@ -47,6 +47,7 @@ function check_result() {
 
     FUNCTION_NAME=${1}
     FUNCTION_RESULT=${2}
+    echo ${FUNCTION_RESULT}
 
     if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
