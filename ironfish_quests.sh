@@ -63,7 +63,7 @@ function CheckResultFunc() {
     if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
         if [[ ${FUNCTION_RESULT} == *"Congratulations! The Iron Fish Faucet just added your request to the queue!"* ]]; then
             FUNC_RESULT="success"
-            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
+            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
             WALLET_BALANCE=$(GetBalanceFunc)
             echo -e "Wallet balance: ${WALLET_BALANCE}."
             while [[ $(echo "${WALLET_BALANCE} < 0.00000003" | bc ) -eq 1 ]]; do
@@ -73,33 +73,19 @@ function CheckResultFunc() {
                 echo -e "Wallet balance: ${WALLET_BALANCE}."
             done
         else
-            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL | #${FUNC_TRY} ] ///////////////////\n${FUNCTION_RESULT}"
+            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL ] ///////////////////\n${FUNCTION_RESULT}"
         fi
     elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
-        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS | #${FUNC_TRY} ] ///////////////////\n"
+        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
         WaitTransactionToBeCompleted $(GetTransactionHashFunc "${FUNCTION_RESULT}")
 
         if [[ ${FUNCTION_NAME} == "MINT" ]]; then
             IDENTIFIER=$(echo ${RESULT} | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
         fi
     else
-        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL | #${FUNC_TRY} ] ///////////////////\n${FUNCTION_RESULT}"
+        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL ] ///////////////////\n${FUNCTION_RESULT}"
     fi
-}
-
-
-function TryUntilSuccessFunc() {
-    FUNCTION=${1}
-
-    FUNC_RESULT="fail"
-    FUNC_TRY=0
-
-    while [[ ${FUNC_RESULT} == "fail" ]]; do
-        FUNC_TRY=$((FUNC_TRY + 1))
-        ${FUNCTION}
-        sleep 5
-    done
 }
 
 
@@ -125,11 +111,11 @@ BIN=$(GetBinaryFunc)
 GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
 
 if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
-    TryUntilSuccessFunc "FaucetFunc"
+    FaucetFunc
 fi
 
-TryUntilSuccessFunc "MintFunc"
-TryUntilSuccessFunc "BurnFunc"
-TryUntilSuccessFunc "SendFunc"
+MintFunc
+BurnFunc
+SendFunc
 
 echo -e "with love by @ipohosov."
