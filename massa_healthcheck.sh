@@ -1,6 +1,4 @@
 #!/bin/bash
-#Thank's for ipohosov. Donates - TZ7pxizxodsy8J52D5FZzQFp3X5DSpyB1X
-
 
 cd $HOME
 while true
