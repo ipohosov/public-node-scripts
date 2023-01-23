@@ -63,14 +63,14 @@ function check_result() {
 
 function mint_asset() {
     echo 'mint_asset'
-    RESULT=$(echo "Y" | ${BIN} ironfish wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001 | tr -d '\0')
+    RESULT=$(echo "Y" | ${BIN} ironfish wallet:mint --name=${IRONFISH_GRAFFITI} --metadata=${IRONFISH_GRAFFITI}  --amount=100 --fee=0.00000001 | tr -d '\0')
     check_result "MINT ASSET" "${RESULT}"
 }
 
 
 function burn_asset() {
     echo 'burn_asset'
-    RESULT=$(echo "Y" | ${BIN} ironfish wallet:burn --assetId=${IDENTIFIER} --amount=500 --fee=0.00000001 | tr -d '\0')
+    RESULT=$(echo "Y" | ${BIN} ironfish wallet:burn --assetId=${IDENTIFIER} --amount=50 --fee=0.00000001 | tr -d '\0')
     check_result "BURN ASSET" "${RESULT}"
 }
 
@@ -78,7 +78,7 @@ function burn_asset() {
 function send_asset() {
     echo 'send_asset'
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
-    RESULT=$(echo "Y" | ${BIN} ironfish wallet:send --assetId=${IDENTIFIER} --amount 500 --to ${ADDRESS_TO_SEND} --memo "${GRAFFITI}" --fee=0.00000001 | tr -d '\0')
+    RESULT=$(echo "Y" | ${BIN} ironfish wallet:send --assetId=${IDENTIFIER} --amount 50 --to ${ADDRESS_TO_SEND} --memo "${IRONFISH_GRAFFITI}" --fee=0.00000001 | tr -d '\0')
     check_result "SEND ASSET" "${RESULT}"
 }
 
