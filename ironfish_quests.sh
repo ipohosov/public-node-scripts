@@ -19,6 +19,7 @@ fi
 
 
 function wait_completed_transaction() {
+    echo 'wait_completed_transaction'
     HASH=${1}
 
     TRANSACTION_STATUS="unconfirmed."
@@ -35,11 +36,13 @@ function wait_completed_transaction() {
 
 
 function get_balance() {
+    echo 'get_balance'
     ${BIN} ironfish wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
 }
 
 
 function check_result() {
+    echo 'check_result'
     FUNC_RESULT="fail"
 
     FUNCTION_NAME=${1}
@@ -59,18 +62,21 @@ function check_result() {
 }
 
 function mint_asset() {
+    echo 'mint_asset'
     RESULT=$(echo "Y" | ${BIN} ironfish wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001 | tr -d '\0')
     check_result "MINT ASSET" "${RESULT}"
 }
 
 
 function burn_asset() {
+    echo 'burn_asset'
     RESULT=$(echo "Y" | ${BIN} ironfish wallet:burn --assetId=${IDENTIFIER} --amount=500 --fee=0.00000001 | tr -d '\0')
     check_result "BURN ASSET" "${RESULT}"
 }
 
 
 function send_asset() {
+    echo 'send_asset'
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
     RESULT=$(echo "Y" | ${BIN} ironfish wallet:send --assetId=${IDENTIFIER} --amount 500 --to ${ADDRESS_TO_SEND} --memo "${GRAFFITI}" --fee=0.00000001 | tr -d '\0')
     check_result "SEND ASSET" "${RESULT}"
@@ -78,6 +84,7 @@ function send_asset() {
 
 
 function get_transaction_hash() {
+    echo 'get_transaction_hash'
     INPUT=${1}
     HASH=$(echo ${INPUT} | grep -Eo "Transaction Hash: [a-z0-9]*" | sed "s/Transaction Hash: //")
     echo ${HASH}
@@ -85,6 +92,7 @@ function get_transaction_hash() {
 
 
 function download_scripts() {
+    echo 'download_scripts'
 	rm -rf $HOME/ironfish-scripts
 	mkdir $HOME/ironfish-scripts
 	
@@ -93,6 +101,7 @@ function download_scripts() {
 }
 
 function copy_files_to_container() {
+    echo 'copy_files_to_container'
 	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 	docker cp ./ironfish-scripts/faucet.sh $DOCKER_CONTAINER:/usr/src/app/faucet.sh
 	docker cp ./.profile $DOCKER_CONTAINER:/usr/src/app/.ironfish_profile
@@ -100,6 +109,7 @@ function copy_files_to_container() {
 
 
 function wait_successfull_transaction() {
+    echo 'wait_successfull_transaction'
     FUNCTION=${1}
 
     FUNC_RESULT="fail"
@@ -114,6 +124,7 @@ function wait_successfull_transaction() {
 
 
 function get_binary() {
+    echo 'get_binary'
 	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 	BINARY="docker exec -i ${DOCKER_CONTAINER} ironfish"
 	echo ${BINARY}
