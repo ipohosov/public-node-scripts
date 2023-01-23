@@ -116,7 +116,6 @@ function wait_successfull_transaction() {
 
 function get_binary() {
 	DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
-	DOCKER_TEST=$(docker exec -it ${DOCKER_CONTAINER})
 	BINARY="docker exec -i ${DOCKER_CONTAINER} ironfish"
 	echo ${BINARY}
 }
@@ -126,7 +125,6 @@ cd $HOME
 while true
 do
 	source .profile
-	setup_variables
 	BIN=$(get_binary)
 	IRONFISH_WALLET=$(${BIN} ironfish wallet:address | awk -F': ' '{ print $3 }')
 	IRONFISH_GRAFFITI=$(${BIN} ironfish config | grep blockGraffiti | awk -F'"' '{ print $4 }')
