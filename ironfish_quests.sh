@@ -43,7 +43,8 @@ function SendFunc() {
 
 function FaucetFunc() {
     RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet &>/dev/null)
-    echo -e "Faucet ${RESULT}"
+    echo "Faucet"
+    echo ${RESULT}
     CheckResultFunc "FAUCET" "${RESULT}"
 }
 
