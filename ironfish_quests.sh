@@ -23,8 +23,8 @@ function GetBalanceFunc() {
 
 
 function MintFunc() {
-    echo "Y" | ${BIN} wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001 > .iron_mint 
-    RESULT=$(<.iron_mint )
+    echo "Y" | ${BIN} wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001 >> .iron_mint 
+    RESULT=$(<.iron_mint)
     CheckResultFunc "MINT" "${RESULT}"
 }
 
