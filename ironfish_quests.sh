@@ -84,11 +84,10 @@ function get_transaction_hash() {
 }
 
 
-function download_scripts_and_soft() {
+function download_scripts() {
 	rm -rf $HOME/ironfish-scripts
 	mkdir $HOME/ironfish-scripts
 	
-	apt install bc -y
 	wget -q -O $HOME/ironfish-scripts/faucet.sh https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_faucet.sh
 	chmod u+x $HOME/ironfish-scripts/faucet.sh
 }
@@ -125,12 +124,13 @@ cd $HOME
 while true
 do
 	source .profile
+    apt install bc -y
 	BIN=$(get_binary)
 	IRONFISH_WALLET=$(${BIN} ironfish wallet:address | awk -F': ' '{ print $3 }')
 	IRONFISH_GRAFFITI=$(${BIN} ironfish config | grep blockGraffiti | awk -F'"' '{ print $4 }')
 
 	if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
-		download_scripts_and_soft
+		download_scripts
 		copy_files_to_container
 		${BIN} sh faucet.sh
 	fi
