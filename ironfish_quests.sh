@@ -142,9 +142,10 @@ do
 	IRONFISH_GRAFFITI=$(${BIN} config | grep blockGraffiti | awk -F'"' '{ print $4 }')
 
 	if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
+        DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 		download_scripts
 		copy_files_to_container
-		${BIN} sh faucet.sh
+		docker exec -it ${DOCKER_CONTAINER} sh faucet.sh
 	fi
 	wait_successfull_transaction "mint_asset"
 	wait_successfull_transaction "burn_asset"
