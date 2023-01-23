@@ -138,8 +138,7 @@ do
 	source .profile
     apt install bc -y
 	BIN=$(get_binary)
-	IRONFISH_WALLET=$(${BIN} wallet:address | awk -F': ' '{ print $3 }')
-	IRONFISH_GRAFFITI=$(${BIN} config | grep blockGraffiti | awk -F'"' '{ print $4 }')
+    IRONFISH_GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
 
 	if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
         DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
