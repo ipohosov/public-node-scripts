@@ -23,26 +23,27 @@ function GetBalanceFunc() {
 
 
 function MintFunc() {
-    RESULT=$(echo "Y" | ${BIN} wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001)
+
+    RESULT=$(echo "Y" | ${BIN} wallet:mint --name=${GRAFFITI} --metadata=${GRAFFITI}  --amount=1000 --fee=0.00000001 | tr -d '\0' | sed 's/Do you confirm (Y\/N)?: //')
     CheckResultFunc "MINT" "${RESULT}"
 }
 
 
 function BurnFunc() {
-    RESULT=$(echo "Y" | ${BIN} wallet:burn --assetId=${IDENTIFIER} --amount=500 --fee=0.00000001)
+    RESULT=$(echo "Y" | ${BIN} wallet:burn --assetId=${IDENTIFIER} --amount=500 --fee=0.00000001 | tr -d '\0' | sed 's/Do you confirm (Y\/N)?: //')
     CheckResultFunc "BURN" "${RESULT}"
 }
 
 
 function SendFunc() {
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
-    RESULT=$(echo "Y" | ${BIN} wallet:send --assetId=${IDENTIFIER} --amount 500 --to ${ADDRESS_TO_SEND} --memo "${GRAFFITI}" --fee=0.00000001)
+    RESULT=$(echo "Y" | ${BIN} wallet:send --assetId=${IDENTIFIER} --amount 500 --to ${ADDRESS_TO_SEND} --memo "${GRAFFITI}" --fee=0.00000001 | tr -d '\0' | sed 's/Do you confirm (Y\/N)?: //')
     CheckResultFunc "SEND" "${RESULT}"
 }
 
 
 function FaucetFunc() {
-    RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet)
+    RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet | tr -d '\0')
     CheckResultFunc "FAUCET" "${RESULT}"
 }
 
