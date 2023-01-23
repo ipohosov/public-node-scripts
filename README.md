@@ -31,6 +31,20 @@ echo 'export IRONFISH_EMAIL=your_email' >> $HOME/.profile
 bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_quests.sh)
 ```
 
+### 3. bundlr_healthcheck
+
+1. Install tmux:
+```
+apt install tmux -y
+```
+2. Start tmux session:
+```
+tmux new-session -d -s bundlr_healthcheck 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/bundlr_healthcheck.sh)'
+```
+3. Remove session
+```
+tmux kill-session -t bundlr_healthcheck
+```
 
 ## Usefull commands
 1. Check the list of active tmux sessions:
