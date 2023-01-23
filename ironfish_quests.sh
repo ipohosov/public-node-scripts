@@ -127,9 +127,9 @@ while true
 do
 	source .profile
     apt install bc -y
-    BIN=$(GetBinaryFunc)
+    BIN=$(get_binary)
     GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
-    echo 'Graffiti ${IRONFISH_GRAFFITI} '
+    echo "Graffiti ${IRONFISH_GRAFFITI}"
 	if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
         DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 		download_scripts
