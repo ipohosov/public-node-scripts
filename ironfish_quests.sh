@@ -128,8 +128,8 @@ do
 	source .profile
     BIN=$(get_binary)
     IRONFISH_GRAFFITI=$(echo ${BIN} config | grep blockGraffiti | awk -F'"' '{ print $4 }')
-    echo "Graffiti ${IRONFISH_GRAFFITI}"
-	if [ $(get_balance) lt "0.00000003" ]; then
+    echo ${IRONFISH_GRAFFITI}
+	if [ $(get_balance) -lt "0.00000003" ]; then
         DOCKER_CONTAINER=$(docker ps | grep ironfish | awk '{ print $1 }')
 		download_scripts
 		copy_files_to_container
