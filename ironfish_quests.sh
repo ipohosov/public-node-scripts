@@ -6,7 +6,7 @@ function WaitTransactionToBeCompleted() {
 
     TRANSACTION_STATUS="unconfirmed."
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]]; do
-        TRANSACTION_STATUS=$(ironfish wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
+        TRANSACTION_STATUS=$(${BIN} wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
         if [[ ${TRANSACTION_STATUS} != "confirmed" ]]; then
             echo -e "hash: ${HASH}, transaction status: ${TRANSACTION_STATUS}."
             sleep 10
@@ -18,25 +18,25 @@ function WaitTransactionToBeCompleted() {
 
 
 function GetBalanceFunc() {
-    ironfish wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
+    ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
 }
 
 
 function MintFunc() {
-    RESULT=$(ironfish wallet:mint -a 10 -f ${NODE_NAME} -m ${GRAFFITI} -n ${GRAFFITI} -o 0.00000001 --confirm | tr -d '\0')
+    RESULT=$(${BIN} wallet:mint -a 10 -f ${NODE_NAME} -m ${GRAFFITI} -n ${GRAFFITI} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "MINT" "${RESULT}"
 }
 
 
 function BurnFunc() {
-    RESULT=$(ironfish wallet:burn -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -o 0.00000001 --confirm | tr -d '\0')
+    RESULT=$(${BIN} wallet:burn -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "BURN" "${RESULT}"
 }
 
 
 function SendFunc() {
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
-    RESULT=$(ironfish wallet:send -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -t ${ADDRESS_TO_SEND} -o 0.00000001 --confirm | tr -d '\0')
+    RESULT=$(${BIN} wallet:send -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -t ${ADDRESS_TO_SEND} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "SEND" "${RESULT}"
 }
 
@@ -107,8 +107,8 @@ cd $HOME
 apt install bc -y
 
 BIN=$(GetBinaryFunc)
-GRAFFITI=$(echo $(ironfish config:get blockGraffiti) | sed 's/\"//g')
-NODE_NAME=$(echo $(ironfish config:get nodeName) | sed 's/\"//g')
+GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
+NODE_NAME=$(echo $(${BIN} config:get nodeName) | sed 's/\"//g')
 
 if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
     FaucetFunc
