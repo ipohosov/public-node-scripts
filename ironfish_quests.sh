@@ -126,4 +126,4 @@ else
     echo "Minimum required: \$IRON 0.00000003, but you have only: \$IRON $(GetBalanceFunc)."
 fi
 
-echo -e "with love by @ipohosov."
+echo "\n Mint, burn and send assets were fisnished succsessfully with love by @mplife"
