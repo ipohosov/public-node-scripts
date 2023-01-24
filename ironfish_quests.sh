@@ -23,18 +23,21 @@ function GetBalanceFunc() {
 
 
 function MintFunc() {
+    echo -e "\n/////////////////// [ MINT ASSET ] ///////////////////\n"
     RESULT=$(${BIN} wallet:mint -a 10 -f ${NODE_NAME} -m ${GRAFFITI} -n ${GRAFFITI} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "MINT" "${RESULT}"
 }
 
 
 function BurnFunc() {
+    echo -e "\n/////////////////// [ BURN ASSET ] ///////////////////\n"
     RESULT=$(${BIN} wallet:burn -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "BURN" "${RESULT}"
 }
 
 
 function SendFunc() {
+    echo -e "\n/////////////////// [ SEND ASSET ] ///////////////////\n"
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
     RESULT=$(${BIN} wallet:send -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -t ${ADDRESS_TO_SEND} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "SEND" "${RESULT}"
@@ -42,6 +45,7 @@ function SendFunc() {
 
 
 function FaucetFunc() {
+    echo -e "\n/////////////////// [ FAUCET ASSET ] ///////////////////\n"
     RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet | tr -d '\0')
     CheckResultFunc "FAUCET" "${RESULT}"
 }
