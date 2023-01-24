@@ -22,11 +22,7 @@ function WaitTransactionToBeCompleted() {
 
 
 function GetBalanceFunc() {
-    if [[ ${1} == '' ]]; then
-        ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
-    else
-        ${BIN} wallet:balance --assetId=${1} | grep -Eo "[0-9]+([.][0-9]+)?" | tail -1
-    fi
+    ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
 }
 
 
