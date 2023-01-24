@@ -126,16 +126,17 @@ BIN=$(GetBinaryFunc)
 GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
 NODE_NAME=$(echo $(${BIN} config:get nodeName) | sed 's/\"//g')
 
-if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
+if [[ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]]; then
     FaucetFunc
 fi
-if [ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]; then
+if [[ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]]; then
     MintFunc
     BurnFunc
     SendFunc
 else
     echo "Not enough balance. Looks like faucet doesn't work at that moment."
     echo "Minimum required: \$IRON 0.00000003, but you have only: \$IRON $(GetBalanceFunc)."
+    exit 0
 fi
 
-echo "\n Mint, burn and send assets were fisnished succsessfully with love by @mplife"
+echo -e "\nMint, burn and send assets were fisnished succsessfully with love by @mplife"
