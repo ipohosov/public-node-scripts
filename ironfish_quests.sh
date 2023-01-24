@@ -23,21 +23,21 @@ function GetBalanceFunc() {
 
 
 function MintFunc() {
-    echo -e "\n/////////////////// [ MINT ASSET ] ///////////////////\n"
+    echo -e "\n-------------------- [ MINT ASSET ] --------------------\n"
     RESULT=$(${BIN} wallet:mint -a 10 -f ${NODE_NAME} -m ${GRAFFITI} -n ${GRAFFITI} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "MINT" "${RESULT}"
 }
 
 
 function BurnFunc() {
-    echo -e "\n/////////////////// [ BURN ASSET ] ///////////////////\n"
+    echo -e "\n-------------------- [ BURN ASSET ] --------------------\n"
     RESULT=$(${BIN} wallet:burn -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "BURN" "${RESULT}"
 }
 
 
 function SendFunc() {
-    echo -e "\n/////////////////// [ SEND ASSET ] ///////////////////\n"
+    echo -e "\n-------------------- [ SEND ASSET ] --------------------\n"
     ADDRESS_TO_SEND="dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca"
     RESULT=$(${BIN} wallet:send -a 5 -f ${NODE_NAME} -i ${IDENTIFIER} -t ${ADDRESS_TO_SEND} -o 0.00000001 --confirm | tr -d '\0')
     CheckResultFunc "SEND" "${RESULT}"
@@ -45,7 +45,7 @@ function SendFunc() {
 
 
 function FaucetFunc() {
-    echo -e "\n/////////////////// [ FAUCET ASSET ] ///////////////////\n"
+    echo -e "\n-------------------- [ FAUCET ASSET ] --------------------\n"
     RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet | tr -d '\0')
     CheckResultFunc "FAUCET" "${RESULT}"
 }
@@ -67,7 +67,7 @@ function CheckResultFunc() {
     if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
         if [[ ${FUNCTION_RESULT} == *"Congratulations! The Iron Fish Faucet just added your request to the queue!"* ]]; then
             FUNC_RESULT="success"
-            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
+            echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
             WALLET_BALANCE=$(GetBalanceFunc)
             echo -e "Wallet balance: ${WALLET_BALANCE}."
             while [[ $(echo "${WALLET_BALANCE} < 0.00000003" | bc ) -eq 1 ]]; do
@@ -77,18 +77,18 @@ function CheckResultFunc() {
                 echo -e "Wallet balance: ${WALLET_BALANCE}."
             done
         else
-            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL ] ///////////////////\n${FUNCTION_RESULT}"
+            echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
         fi
     elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
-        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
+        echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
         WaitTransactionToBeCompleted $(GetTransactionHashFunc "${FUNCTION_RESULT}")
 
         if [[ ${FUNCTION_NAME} == "MINT" ]]; then
             IDENTIFIER=$(echo ${RESULT} | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
         fi
     else
-        echo -e "\n/////////////////// [ ${FUNCTION_NAME} | FAIL ] ///////////////////\n${FUNCTION_RESULT}"
+        echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
     fi
 }
 
