@@ -120,5 +120,6 @@ if [ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]; then
 else
     echo "Not enough balance. Looks like faucet doesn't work at that moment."
     echo "Minimum required: \$IRON 0.00000003, but you have only: \$IRON $(GetBalanceFunc)."
+fi
 
 echo -e "with love by @ipohosov."
