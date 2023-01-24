@@ -122,10 +122,10 @@ BIN=$(GetBinaryFunc)
 GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
 NODE_NAME=$(echo $(${BIN} config:get nodeName) | sed 's/\"//g')
 
-if [[ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]]; then
+if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
     FaucetFunc
 fi
-if [[ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]]; then
+if [ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]; then
     MintFunc
     BurnFunc
     SendFunc
