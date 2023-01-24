@@ -42,7 +42,6 @@ function SendFunc() {
 
 
 function FaucetFunc() {
-    BIN=$(GetBinaryFunc)
     RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet | tr -d '\0')
     CheckResultFunc "FAUCET" "${RESULT}"
 }
@@ -107,6 +106,7 @@ function GetBinaryFunc() {
 cd $HOME
 apt install bc -y
 
+BIN=$(GetBinaryFunc)
 GRAFFITI=$(echo $(ironfish config:get blockGraffiti) | sed 's/\"//g')
 NODE_NAME=$(echo $(ironfish config:get nodeName) | sed 's/\"//g')
 
