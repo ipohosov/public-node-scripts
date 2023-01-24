@@ -5,20 +5,28 @@ function WaitTransactionToBeCompleted() {
     HASH=${1}
 
     TRANSACTION_STATUS="unconfirmed."
-    while [[ ${TRANSACTION_STATUS} != "confirmed" ]]; do
+    while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
         TRANSACTION_STATUS=$(${BIN} wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
-        if [[ ${TRANSACTION_STATUS} != "confirmed" ]]; then
-            echo -e "hash: ${HASH}, transaction status: ${TRANSACTION_STATUS}."
-            sleep 10
+        if [[ ${TRANSACTION_STATUS} == "unconfirmed" ]] || [[ ${TRANSACTION_STATUS} == "pending" ]]; then
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}."
+            sleep 20
+        elif [[ ${TRANSACTION_STATUS} == "confirmed" ]]; then
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n"
+        elif [[ ${TRANSACTION_STATUS} == "expired" ]]; then
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nThis is not okay, starting from zero.\n"
         else
-            echo -e "hash: ${HASH}, transaction status: ${TRANSACTION_STATUS}.\n"
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nUnknown status. Please start from zero.\n"
         fi
     done
 }
 
 
 function GetBalanceFunc() {
-    ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
+    if [[ ${1} == '' ]]; then
+        ${BIN} wallet:balance | grep -o "[0-9]\+.[0-9]*" | tail -1
+    else
+        ${BIN} wallet:balance --assetId=${1} | grep -Eo "[0-9]+([.][0-9]+)?" | tail -1
+    fi
 }
 
 
@@ -46,7 +54,7 @@ function SendFunc() {
 
 function FaucetFunc() {
     echo -e "\n-------------------- [ FAUCET ASSET ] --------------------\n"
-    RESULT=$(echo $IRONFISH_EMAIL | ${BIN} faucet | tr -d '\0')
+    RESULT=$(echo -e "${IRONFISH_EMAIL}\n\n" | ${BIN} faucet | tr -d '\0')
     CheckResultFunc "FAUCET" "${RESULT}"
 }
 
@@ -78,6 +86,8 @@ function CheckResultFunc() {
             done
         else
             echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
+            echo -e "The script was failed. Please check logs and try later."
+            exit 0
         fi
     elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
@@ -89,6 +99,8 @@ function CheckResultFunc() {
         fi
     else
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
+        echo -e "The script was failed. Please check logs and try later."
+        exit 0
     fi
 }
 
