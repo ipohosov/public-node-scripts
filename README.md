@@ -26,6 +26,10 @@ tmux kill-session -t massa_healthcheck
 ```
 echo 'export IRONFISH_EMAIL=your_email' >> $HOME/.profile
 ```
+If you don't remember it you can check it with the following command:
+```
+cat .profile
+```
 2. Execute script
 ```
 bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_quests.sh)
