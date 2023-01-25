@@ -92,7 +92,6 @@ function GetBinaryFunc() {
 }
 
 cd $HOME
-apt install bc -y
 
 BIN=$(GetBinaryFunc)
 GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
