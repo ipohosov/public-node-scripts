@@ -48,13 +48,6 @@ function SendFunc() {
 }
 
 
-function FaucetFunc() {
-    echo -e "\n-------------------- [ FAUCET ASSET ] --------------------\n"
-    RESULT=$(echo -e "${IRONFISH_EMAIL}\n\n" | ${BIN} faucet | tr -d '\0')
-    CheckResultFunc "FAUCET" "${RESULT}"
-}
-
-
 function GetTransactionHashFunc() {
     INPUT=${1}
     HASH=$(echo ${INPUT} | grep -Eo "Transaction Hash: [a-z0-9]*" | sed "s/Transaction Hash: //")
@@ -68,24 +61,7 @@ function CheckResultFunc() {
     FUNCTION_NAME=${1}
     FUNCTION_RESULT=${2}
 
-    if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
-        if [[ ${FUNCTION_RESULT} == *"Congratulations! The Iron Fish Faucet just added your request to the queue!"* ]]; then
-            FUNC_RESULT="success"
-            echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
-            WALLET_BALANCE=$(GetBalanceFunc)
-            echo -e "Wallet balance: ${WALLET_BALANCE}."
-            while [[ $(echo "${WALLET_BALANCE} < 0.00000003" | bc ) -eq 1 ]]; do
-                echo -e "Waiting..."
-                sleep 15
-                WALLET_BALANCE=$(GetBalanceFunc)
-                echo -e "Wallet balance: ${WALLET_BALANCE}."
-            done
-        else
-            echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
-            echo -e "The script was failed. Please check logs and try later."
-            exit 0
-        fi
-    elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
+    if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         FUNC_RESULT="success"
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
         WaitTransactionToBeCompleted $(GetTransactionHashFunc "${FUNCTION_RESULT}")
@@ -122,17 +98,8 @@ BIN=$(GetBinaryFunc)
 GRAFFITI=$(echo $(${BIN} config:get blockGraffiti) | sed 's/\"//g')
 NODE_NAME=$(echo $(${BIN} config:get nodeName) | sed 's/\"//g')
 
-if [ $(echo "$(GetBalanceFunc) < 0.00000003" | bc ) -eq 1 ]; then
-    FaucetFunc
-fi
-if [ $(echo "$(GetBalanceFunc) > 0.00000002" | bc ) -eq 1 ]; then
-    MintFunc
-    BurnFunc
-    SendFunc
-else
-    echo "Not enough balance. Looks like faucet doesn't work at that moment."
-    echo "Minimum required: \$IRON 0.00000003, but you have only: \$IRON $(GetBalanceFunc)."
-    exit 0
-fi
+MintFunc
+BurnFunc
+SendFunc
 
 echo -e "\nMint, burn and send assets were fisnished succsessfully with love by @mplife"
