@@ -1,0 +1,10 @@
+node-modules
+.idea
+*.pyc
+venv/
+.env
+_pycache_
+.pytest_cache/
+*/.DS_Store
+.DS_Store
+.sqlite.db
