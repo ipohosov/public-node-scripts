@@ -13,7 +13,7 @@ apt install tmux -y
 ```
 2. Start tmux session:
 ```
-tmux new-session -d -s massa_healthcheck 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa_healthcheck.sh)'
+tmux new-session -d -s massa_healthcheck 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/massa_healthcheck.sh)'
 ```
 3. Remove session
 ```
@@ -32,7 +32,7 @@ cat .profile
 ```
 2. Execute script
 ```
-bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish_quests.sh)
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish/ironfish_quests.sh)
 ```
 
 ### 3. bundlr_healthcheck
@@ -43,7 +43,7 @@ apt install tmux -y
 ```
 2. Start tmux session:
 ```
-tmux new-session -d -s bundlr_healthcheck 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/bundlr_healthcheck.sh)'
+tmux new-session -d -s bundlr_healthcheck 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/bundlr/bundlr_healthcheck.sh)'
 ```
 3. Remove session
 ```
