@@ -1,15 +1,26 @@
 import json
 import requests
 
-request_url = "https://l2explorer.a1.taiko.xyz/address-counters?id={}"
+L2_EXPLORER_TAIKO = "https://l2explorer.a1.taiko.xyz"
 
 
 def collect_data(wallet_address):
-    response = json.loads(requests.request("GET", request_url.format(wallet_address), headers={}, data={}).text)
-    return {"Gas usage count": response.get("gas_usage_count"),
-            "Token transfer count": response.get("token_transfer_count"),
-            "Transaction count": response.get("transaction_count"),
-            "Validation count": response.get("validation_count")}
+    node_activity = get_node_activity(wallet_address)
+    balance = get_balance(wallet_address)
+    return {"Wallet address": wallet_address, "ETH": balance[-1].get("value"),
+            "Gas usage count": node_activity.get("gas_usage_count"),
+            "Token transfer count": node_activity.get("token_transfer_count"),
+            "Transaction count": node_activity.get("transaction_count"),
+            "Validation count": node_activity.get("validation_count")}
+
+def get_node_activity(wallet_address):
+    url = f"{L2_EXPLORER_TAIKO}/address-counters?id={wallet_address}"
+    return json.loads(requests.request("GET", url, headers={}, data={}).text)
+
+
+def get_balance(wallet_address):
+    url = f"{L2_EXPLORER_TAIKO}/address/{wallet_address}/coin-balances/by-day?type=JSON"
+    return json.loads(requests.request("GET", url, headers={}, data={}).text)
 
 
 if __name__ == "__main__":
@@ -19,7 +30,6 @@ if __name__ == "__main__":
     results = []
 
     for wallet_address in wallets:
-        results.append(collect_data(wallet_address))
-
-    for result in results:
+        result = collect_data(wallet_address)
         print(str(result))
+        results.append(result)
