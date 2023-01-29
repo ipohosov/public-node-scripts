@@ -4,7 +4,10 @@ node-modules
 venv/
 .env
 _pycache_
+.vscode
+taiko_results.json
 .pytest_cache/
 */.DS_Store
 .DS_Store
 .sqlite.db
+taiko/check_taiko_statistics/.env

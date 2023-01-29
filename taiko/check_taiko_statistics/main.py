@@ -1,26 +1,72 @@
+import contextlib
 import json
 import requests
 
 L2_EXPLORER_TAIKO = "https://l2explorer.a1.taiko.xyz"
 
 
-def collect_data(wallet_address):
+def collect_data(wallet_address: str, node_name: str):
     node_activity = get_node_activity(wallet_address)
     balance = get_balance(wallet_address)
-    return {"Wallet address": wallet_address, "ETH": balance[-1].get("value"),
+    return {"Node name": node_name, "Wallet address": wallet_address, "ETH": balance[-1].get("value"),
             "Gas usage count": node_activity.get("gas_usage_count"),
             "Token transfer count": node_activity.get("token_transfer_count"),
             "Transaction count": node_activity.get("transaction_count"),
             "Validation count": node_activity.get("validation_count")}
 
-def get_node_activity(wallet_address):
+
+def get_node_activity(wallet_address: str):
     url = f"{L2_EXPLORER_TAIKO}/address-counters?id={wallet_address}"
     return json.loads(requests.request("GET", url, headers={}, data={}).text)
 
 
-def get_balance(wallet_address):
+def get_balance(wallet_address: str):
     url = f"{L2_EXPLORER_TAIKO}/address/{wallet_address}/coin-balances/by-day?type=JSON"
     return json.loads(requests.request("GET", url, headers={}, data={}).text)
+
+
+def get_previous_results():
+    with contextlib.suppress(FileNotFoundError):
+        with open('taiko_results.json', 'r') as infile:
+            data = json.load(infile)
+        return data
+    return []
+
+
+def write_results_in_file(taiko_results: list[dict]):
+    with open('taiko_results.json', 'w') as outfile:
+        json.dump(taiko_results, outfile)
+
+
+def compare_changes(new_data: list[dict]):
+    previous_data = get_previous_results()
+    if previous_data:
+        sorted_data_previous_data = sorted(previous_data, key=lambda d: d['Wallet address'])
+        spd = sorted_data_previous_data
+        sorted_data_new_data = sorted(new_data, key=lambda d: d['Wallet address'])
+        snd = sorted_data_new_data
+        for i in range(0, len(new_data)):
+            eth_diff = snd[i].get('ETH') - spd[i].get('ETH')
+            gas_diff = snd[i].get('Gas usage count') - spd[i].get('Gas usage count')
+            token_diff = snd[i].get('Token transfer count') - spd[i].get('Token transfer count')
+            transaction_diff = snd[i].get('Transaction count') - spd[i].get('Transaction count')
+            validation_diff = snd[i].get('Validation count') - spd[i].get('Validation count')
+            all_diff = [eth_diff, gas_diff, token_diff, transaction_diff, validation_diff]
+            all_titles = ["ETH", "Gas usage count", "Token transfer count", "Transaction count", "Validation count"]
+            if sum(map(abs, all_diff)) > 0:
+                aggregated_text = ""
+                entry = 0
+                for diff, title in zip(all_diff, all_titles):
+                    if abs(diff) > 0:
+                        aggregated_text = aggregated_text + f"{'' if entry ==0 else ', '}{title}: {diff}"
+                        entry += 1
+                print(f"Node name: {snd[i].get('Node name')}. "
+                      f"Wallet: {snd[i].get('Wallet address')} has the following changes: {aggregated_text}")
+            else:
+                print(f"Node name: {snd[i].get('Node name')}. Wallet: {snd[i].get('Wallet address')} has no changes.")
+    else:
+        print("The previous results were not found. The script will write current results in file "
+              "and will use them next time for comparing.")
 
 
 if __name__ == "__main__":
@@ -28,8 +74,15 @@ if __name__ == "__main__":
     with open('.env', 'r') as file:
         wallets = [line.strip() for line in file]
     results = []
-
+    i = 0
     for wallet_address in wallets:
-        result = collect_data(wallet_address)
-        print(str(result))
+        if i == 0:
+            node_name = "Main node"
+        else:
+            node_name = f"Mult {i}"
+        result = collect_data(wallet_address, node_name)
         results.append(result)
+        i += 1
+
+    compare_changes(results)
+    write_results_in_file(results)
