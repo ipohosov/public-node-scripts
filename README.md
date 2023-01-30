@@ -22,15 +22,7 @@ tmux kill-session -t massa_healthcheck
 
 ### 2. ironfish_quests
 
-1. Setup email, that was used for ironfish node(change 'your_email' in command to appropriate email). You need to do it only once to add email to .profile. If you want to change email by some reason you need to edit the value of IRONFISH_EMAIL in this file:
-```
-echo 'export IRONFISH_EMAIL=your_email' >> $HOME/.profile
-```
-If you don't remember it you can check it with the following command:
-```
-cat .profile
-```
-2. Execute script
+1. Execute script
 ```
 bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/ironfish/ironfish_quests.sh)
 ```

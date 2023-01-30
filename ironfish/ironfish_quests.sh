@@ -110,4 +110,4 @@ MintFunc
 BurnFunc
 SendFunc
 
-time_logs "\nMint, burn and send assets were finished successfully with love by @mplife"
+time_logs "Mint, burn and send assets were finished successfully with love by @mplife."
