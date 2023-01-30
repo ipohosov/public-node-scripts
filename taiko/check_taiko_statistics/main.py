@@ -88,4 +88,4 @@ if __name__ == "__main__":
         i += 1
 
     compare_changes(results)
-    # write_results_in_file(results)
+    write_results_in_file(results)
