@@ -33,7 +33,7 @@ function get_balance() {
 }
 
 function faucet_assets() {
-    FAUCET_RESULT=$(echo -e "\n\n" | ironfish faucet)
+    FAUCET_RESULT=$(echo -e "\n\n" | ${BIN} faucet 2>&1)
     if [[ ${FAUCET_RESULT} == *"Congratulations"* ]]; then
         time_logs "\n Assets will be added to your wallet soon.\n"
     else
