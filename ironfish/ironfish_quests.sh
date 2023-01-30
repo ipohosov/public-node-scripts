@@ -76,7 +76,7 @@ function check_results() {
             echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
             WALLET_BALANCE=$(get_balance)
             echo -e "Wallet balance: ${WALLET_BALANCE}."
-            while [[ $(echo "$(get_balance) < 0.20000003" | bc ) -eq 1 ]]; do
+            while [[ $(echo "$(get_balance) < 0.1" | bc ) -eq 1 ]]; do
                 time_logs "Your balance is ${WALLET_BALANCE} still"
                 sleep 15
                 WALLET_BALANCE=$(get_balance)
