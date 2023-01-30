@@ -73,7 +73,7 @@ function CheckResultFunc() {
         fi
     else
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
-        time_logs -e "The script was failed. Please check logs and try later."
+        time_logs "The script was failed. Please check logs and try later."
         exit 0
     fi
 }
