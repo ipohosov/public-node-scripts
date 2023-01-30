@@ -3,6 +3,8 @@
 
 function wait_transaction_confirmation() {
     TRANSACTION_STATUS="unconfirmed"
+    time_logs "Verify the latest transaction."
+    sleep 10s
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
         OUTPUT="$(${BIN} wallet:transactions | sed -n '3 p')"
         array=($OUTPUT)
@@ -34,6 +36,7 @@ function get_balance() {
 
 function faucet_assets() {
   echo -e "\n-------------------- [ FAUCET ASSET ] --------------------\n"
+    time_logs "---ATTENTION: YOU DON'T NEED TO ENTER THE EMAIL---"
     RESULT=$(echo -e "\n\n" | ${BIN} faucet)
     check_results "FAUCET" "${RESULT}"
 }
@@ -58,7 +61,6 @@ function send_asset() {
 }
 
 function check_results() {
-    sleep 10s
     FUNCTION_NAME=${1}
     FUNCTION_RESULT=${2}
 
@@ -69,7 +71,7 @@ function check_results() {
             IDENTIFIER=$(echo "${RESULT}" | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
         fi
     else
-        echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
+        echo -e "\n\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n\n${FUNCTION_RESULT}"
         if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
             time_logs "The faucet was failed. Please ask the assets in discord."
         else
