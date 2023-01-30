@@ -2,21 +2,21 @@
 # Thanks @cyberomanov
 
 function wait_transaction_confirmation() {
-    HASH=${1}
-
-    TRANSACTION_STATUS="unconfirmed."
+    TRANSACTION_STATUS="unconfirmed"
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
-        TRANSACTION_STATUS=$(${BIN} wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
+        OUTPUT="$(${BIN} wallet:transactions | sed -n '3 p')"
+        array=($OUTPUT)
+        TRANSACTION_STATUS="${array[3]}"
         if [[ ${TRANSACTION_STATUS} == "unconfirmed" ]] || [[ ${TRANSACTION_STATUS} == "pending" ]]; then
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}."
+            time_logs "Status: ${TRANSACTION_STATUS}."
             sleep 15s
         elif [[ ${TRANSACTION_STATUS} == "confirmed" ]]; then
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n"
+            time_logs "Status: ${TRANSACTION_STATUS}.\n"
         elif [[ ${TRANSACTION_STATUS} == "expired" ]]; then
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\n"
+            time_logs "Status: ${TRANSACTION_STATUS}.\n\n"
             time_logs "This is not okay, starting from zero.\n"
         else
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\n"
+            time_logs "Status: ${TRANSACTION_STATUS}.\n\n"
             time_logs "I don't know what is the status. Please, retry later."
         fi
     done
@@ -57,39 +57,24 @@ function send_asset() {
     check_results "SEND" "${RESULT}"
 }
 
-function get_transaction_hash() {
-    INPUT=${1}
-    HASH=$(echo "${INPUT}" | grep -Eo "Transaction Hash: [a-z0-9]*" | sed "s/Transaction Hash: //")
-    echo "${HASH}"
-}
-
 function check_results() {
+    sleep 10s
     FUNCTION_NAME=${1}
     FUNCTION_RESULT=${2}
-    if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
-        if [[ ${FUNCTION_RESULT} == *"Congratulations! The Iron Fish Faucet just added your request to the queue!"* ]]; then
-            echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
-            WALLET_BALANCE=$(get_balance)
-            echo -e "Wallet balance: ${WALLET_BALANCE}."
-            while [[ $(echo "$(get_balance) < 0.10000003 " | bc ) -eq 1 ]]; do
-                time_logs "Your balance is ${WALLET_BALANCE} still"
-                sleep 15
-                WALLET_BALANCE=$(get_balance)
-            done
-            time_logs "Your balance is still ${WALLET_BALANCE}"
-        else
-            time_logs "Faucet request failed. It looks like you need to request some assets.\n"
-            exit 0
-        fi
-    elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
+
+    if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* || ${FUNCTION_RESULT} == *"Congratulations"* ]]; then
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
-        wait_transaction_confirmation "$(get_transaction_hash "${FUNCTION_RESULT}")"
+        wait_transaction_confirmation
         if [[ ${FUNCTION_NAME} == "MINT" ]]; then
             IDENTIFIER=$(echo "${RESULT}" | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
         fi
     else
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | FAIL ] --------------------\n${FUNCTION_RESULT}"
-        time_logs "The script was failed. Please check logs and try later."
+        if [[ ${FUNCTION_NAME} == "FAUCET" ]]; then
+            time_logs "The faucet was failed. Please ask the assets in discord."
+        else
+            time_logs "The script was failed. Please check your transactions status(ironfish wallet:transactions)"
+        fi
         exit 0
     fi
 }
