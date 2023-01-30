@@ -98,8 +98,11 @@ cd "$HOME" || exit
 time_logs "Start script with Ironfish quests(mint, burn, send)."
 
 BIN=$(GetBinaryFunc)
-GRAFFITI="$(${BIN} config:get blockGraffiti) | sed 's/\"//g'"
-NODE_NAME="$(${BIN} config:get nodeName) | sed 's/\"//g'"
+
+# shellcheck disable=SC2001,SC2005
+GRAFFITI=$(echo "$(${BIN} config:get blockGraffiti)" | sed 's/\"//g')
+# shellcheck disable=SC2001,SC2005
+NODE_NAME=$(echo "$(${BIN} config:get nodeName)" | sed 's/\"//g')
 
 MintFunc
 BurnFunc
