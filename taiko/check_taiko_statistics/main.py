@@ -45,25 +45,29 @@ def compare_changes(new_data: list[dict]):
         spd = sorted_data_previous_data
         sorted_data_new_data = sorted(new_data, key=lambda d: d['Wallet address'])
         snd = sorted_data_new_data
-        for i in range(0, len(new_data)):
-            eth_diff = snd[i].get('ETH') - spd[i].get('ETH')
-            gas_diff = snd[i].get('Gas usage count') - spd[i].get('Gas usage count')
-            token_diff = snd[i].get('Token transfer count') - spd[i].get('Token transfer count')
-            transaction_diff = snd[i].get('Transaction count') - spd[i].get('Transaction count')
-            validation_diff = snd[i].get('Validation count') - spd[i].get('Validation count')
+        for node_item in range(0, len(new_data)):
+            eth_diff = snd[node_item].get('ETH') - spd[node_item].get('ETH')
+            gas_diff = snd[node_item].get('Gas usage count') - spd[node_item].get('Gas usage count')
+            token_diff = snd[node_item].get('Token transfer count') - spd[node_item].get('Token transfer count')
+            transaction_diff = snd[node_item].get('Transaction count') - spd[node_item].get('Transaction count')
+            validation_diff = snd[node_item].get('Validation count') - spd[node_item].get('Validation count')
             all_diff = [eth_diff, gas_diff, token_diff, transaction_diff, validation_diff]
             all_titles = ["ETH", "Gas usage count", "Token transfer count", "Transaction count", "Validation count"]
-            if sum(map(abs, all_diff)) > 0:
-                aggregated_text = ""
+            if sum(map(abs, all_diff)) > 0:  # checks if any of the differences is not 0 
+                aggregated_text = ""  # empty string to store the differences
                 entry = 0
-                for diff, title in zip(all_diff, all_titles):
+                for diff, title in zip(all_diff, all_titles): # looping through all 
                     if abs(diff) > 0:
-                        aggregated_text = aggregated_text + f"{'' if entry ==0 else ', '}{title}: {diff}"
+                        # adding difference to the string
+                        eth_left = f" (ETH left: {round(snd[node_item].get('ETH'), 2)})" if title in "ETH" else ""
+                        aggregated_text = aggregated_text + f"{'' if entry ==0 else ', '}{title}: {diff}{eth_left}"
                         entry += 1
-                print(f"Node name: {snd[i].get('Node name')}. "
-                      f"Wallet: {snd[i].get('Wallet address')} has the following changes: {aggregated_text}")
-            else:
-                print(f"Node name: {snd[i].get('Node name')}. Wallet: {snd[i].get('Wallet address')} has no changes.")
+                # printing out the changes 
+                print(f"Node name: {snd[node_item].get('Node name')}. "
+                      f"Wallet: {snd[node_item].get('Wallet address')} has the following changes: {aggregated_text}.")
+            else:  # if there are no changes
+                print(f"Node name: {snd[node_item].get('Node name')}. "
+                      f"Wallet: {snd[node_item].get('Wallet address')} has no changes.")
     else:
         print("The previous results were not found. The script will write current results in file "
               "and will use them next time for comparing.")

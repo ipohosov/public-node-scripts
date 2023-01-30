@@ -22,6 +22,7 @@ def aggregate_data(user_id):
     short_data = get_short_data(user_id)
     detailed_data = get_detailed_data(user_id)
     return {"User_id": short_data.get("id"), "Graffiti": short_data.get("graffiti"),
+            "Rank": detailed_data.get("pools").get("main").get("rank"),
             "Total_points": short_data.get("total_points"),
             "Node_uptime_points": detailed_data.get("metrics").get("node_uptime").get("points"),
             "Mint_points": detailed_data.get("metrics").get("multi_asset_mint").get("points"),
