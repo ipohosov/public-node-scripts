@@ -33,14 +33,9 @@ function get_balance() {
 }
 
 function faucet_assets() {
-    FAUCET_RESULT=$(echo -e "\n\n" | ${BIN} faucet)
-    if [[ ${FAUCET_RESULT} == *"Congratulations"* ]]; then
-        echo -e "\n"
-        time_logs "Assets will be added to your wallet soon.\n"
-    else
-        time_logs "Faucet request failed. It looks like you need to request some assets.\n"
-        exit 0
-    fi
+  echo -e "\n-------------------- [ FAUCET ASSET ] --------------------\n"
+    RESULT=$(echo -e "\n\n" | ${BIN} faucet)
+    check_results "FAUCET" "${RESULT}"
 }
 
 function mint_asset() {
@@ -82,6 +77,9 @@ function check_results() {
                 WALLET_BALANCE=$(get_balance)
             done
             time_logs "Your balance is still ${WALLET_BALANCE}"
+        else
+            time_logs "Faucet request failed. It looks like you need to request some assets.\n"
+            exit 0
         fi
     elif [[ ${FUNCTION_RESULT} == *"Transaction Hash"* ]]; then
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
@@ -111,7 +109,7 @@ function get_binary() {
 }
 
 cd "$HOME" || exit
-echo -e "\n"
+
 time_logs "Start script with Ironfish quests(mint, burn, send)."
 
 BIN=$(get_binary)
