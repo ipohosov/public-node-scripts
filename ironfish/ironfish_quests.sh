@@ -8,14 +8,16 @@ function WaitTransactionToBeCompleted() {
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
         TRANSACTION_STATUS=$(${BIN} wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
         if [[ ${TRANSACTION_STATUS} == "unconfirmed" ]] || [[ ${TRANSACTION_STATUS} == "pending" ]]; then
-            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}."
-            sleep 20
+            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}."
+            sleep 15s
         elif [[ ${TRANSACTION_STATUS} == "confirmed" ]]; then
-            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n"
+            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n"
         elif [[ ${TRANSACTION_STATUS} == "expired" ]]; then
-            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nThis is not okay, starting from zero.\n"
+            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\n"
+            time_logs "This is not okay, starting from zero.\n"
         else
-            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nUnknown status. Please start from zero.\n"
+            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\n"
+            time_logs "Unknown status. Please start from zero.\n"
         fi
     done
 }
@@ -57,7 +59,7 @@ function SendFunc() {
 function GetTransactionHashFunc() {
     INPUT=${1}
     HASH=$(echo "${INPUT}" | grep -Eo "Transaction Hash: [a-z0-9]*" | sed "s/Transaction Hash: //")
-    time_logs "${HASH}"
+    echo "${HASH}"
 }
 
 
