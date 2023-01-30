@@ -6,7 +6,7 @@ function wait_transaction_confirmation() {
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
         OUTPUT="$(${BIN} wallet:transactions | sed -n '3 p')"
         array=($OUTPUT)
-        TRANSACTION_STATUS="${array[3]}"
+        TRANSACTION_STATUS="${array[4]}"
         if [[ ${TRANSACTION_STATUS} == "unconfirmed" ]] || [[ ${TRANSACTION_STATUS} == "pending" ]]; then
             time_logs "Status: ${TRANSACTION_STATUS}."
             sleep 15s
