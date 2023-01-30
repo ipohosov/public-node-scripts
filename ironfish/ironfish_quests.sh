@@ -35,9 +35,10 @@ function get_balance() {
 function faucet_assets() {
     FAUCET_RESULT=$(echo -e "\n\n" | ${BIN} faucet)
     if [[ ${FAUCET_RESULT} == *"Congratulations"* ]]; then
-        time_logs "\n Assets will be added to your wallet soon.\n"
+        echo -e "\n"
+        time_logs "Assets will be added to your wallet soon.\n"
     else
-        time_logs "\n Faucet request failed. It looks like you need to request some assets.\n"
+        time_logs "Faucet request failed. It looks like you need to request some assets.\n"
         exit 0
     fi
 }
@@ -75,7 +76,7 @@ function check_results() {
             echo -e "\n/////////////////// [ ${FUNCTION_NAME} | SUCCESS ] ///////////////////\n"
             WALLET_BALANCE=$(get_balance)
             echo -e "Wallet balance: ${WALLET_BALANCE}."
-            while [[ $(echo "$(get_balance) < 0.10000003" | bc ) -eq 1 ]]; do
+            while [[ $(echo "$(get_balance) < 0.20000003" | bc ) -eq 1 ]]; do
                 time_logs "Your balance is ${WALLET_BALANCE} still"
                 sleep 15
                 WALLET_BALANCE=$(get_balance)
@@ -119,7 +120,7 @@ GRAFFITI=$(echo "$(${BIN} config:get blockGraffiti)" | sed 's/\"//g')
 # shellcheck disable=SC2001,SC2005
 NODE_NAME=$(echo "$(${BIN} config:get nodeName)" | sed 's/\"//g')
 
-if [ $(echo "$(get_balance) < 0.10000003" | bc ) -eq 1 ]; then
+if [ $(echo "$(get_balance) < 0.20000003" | bc ) -eq 1 ]; then
     faucet_assets
 fi
 
