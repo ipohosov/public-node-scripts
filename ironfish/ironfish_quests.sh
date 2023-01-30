@@ -106,7 +106,7 @@ GRAFFITI=$(echo "$(${BIN} config:get blockGraffiti)" | sed 's/\"//g')
 # shellcheck disable=SC2001,SC2005
 NODE_NAME=$(echo "$(${BIN} config:get nodeName)" | sed 's/\"//g')
 
-if [ $(echo "$(get_balance) < 0.20000003" | bc ) -eq 1 ]; then
+if [ $(echo "$(get_balance) < 0.00000003" | bc ) -eq 1 ]; then
     faucet_assets
 fi
 
