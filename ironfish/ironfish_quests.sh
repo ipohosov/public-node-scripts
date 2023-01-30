@@ -37,7 +37,7 @@ function get_balance() {
 
 function faucet_assets() {
   echo -e "\n-------------------- [ FAUCET ASSET ] --------------------\n"
-    time_logs "---ATTENTION: YOU DON'T NEED TO ENTER THE EMAIL---"
+    time_logs "---ATTENTION: YOU DON'T NEED TO ENTER YOUR EMAIL---"
     RESULT=$(echo -e "\n\n" | ${BIN} faucet)
     check_results "FAUCET" "${RESULT}"
 }
