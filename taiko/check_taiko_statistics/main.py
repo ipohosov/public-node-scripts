@@ -59,15 +59,14 @@ def compare_changes(new_data: list[dict]):
                 for diff, title in zip(all_diff, all_titles): # looping through all 
                     if abs(diff) > 0:
                         # adding difference to the string
-                        eth_left = f" (ETH left: {round(snd[node_item].get('ETH'), 2)})" if title in "ETH" else ""
                         aggregated_text = aggregated_text + f"{'' if entry ==0 else ', '}{title}: {diff}{eth_left}"
                         entry += 1
-                # printing out the changes 
-                print(f"Node name: {snd[node_item].get('Node name')}. "
-                      f"Wallet: {snd[node_item].get('Wallet address')} has the following changes: {aggregated_text}.")
+                aggregated_output = f"Wallet: {snd[node_item].get('Wallet address')} has the following changes: {aggregated_text}"
             else:  # if there are no changes
-                print(f"Node name: {snd[node_item].get('Node name')}. "
-                      f"Wallet: {snd[node_item].get('Wallet address')} has no changes.")
+                aggregated_output = f"Wallet: {snd[node_item].get('Wallet address')} has no changes"
+            # printing out the changes
+            eth_left = f"ETH left: {round(snd[node_item].get('ETH'), 2)}"
+            print(f"Node name: {snd[node_item].get('Node name')}. {aggregated_output}. {eth_left}.")
     else:
         print("The previous results were not found. The script will write current results in file "
               "and will use them next time for comparing.")
@@ -89,4 +88,4 @@ if __name__ == "__main__":
         i += 1
 
     compare_changes(results)
-    write_results_in_file(results)
+    # write_results_in_file(results)
