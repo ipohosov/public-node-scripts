@@ -2,8 +2,9 @@
 # Thanks @cyberomanov
 
 function wait_transaction_confirmation() {
+    function_name=${1,,}
     TRANSACTION_STATUS="unconfirmed"
-    time_logs "Verify the latest transaction."
+    time_logs "Verify the ${function_name} transaction."
     sleep 10s
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
         OUTPUT="$(${BIN} wallet:transactions | sed -n '3 p')"
@@ -66,7 +67,7 @@ function check_results() {
 
     if [[ ${FUNCTION_RESULT} == *"Transaction Hash"* || ${FUNCTION_RESULT} == *"Congratulations"* ]]; then
         echo -e "\n-------------------- [ ${FUNCTION_NAME} | SUCCESS ] --------------------\n"
-        wait_transaction_confirmation
+        wait_transaction_confirmation "${FUNCTION_NAME}"
         if [[ ${FUNCTION_NAME} == "MINT" ]]; then
             IDENTIFIER=$(echo "${RESULT}" | grep -Eo "Asset Identifier: [a-z0-9]*" | sed "s/Asset Identifier: //")
         fi
