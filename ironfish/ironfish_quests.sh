@@ -6,16 +6,16 @@ function WaitTransactionToBeCompleted() {
 
     TRANSACTION_STATUS="unconfirmed."
     while [[ ${TRANSACTION_STATUS} != "confirmed" ]] && [[ ${TRANSACTION_STATUS} != "expired" ]]; do
-        TRANSACTION_STATUS=$(${BIN} wallet:transaction "${HASH}" | grep "Status: " | sed "s/Status: //")
+        TRANSACTION_STATUS=$(${BIN} wallet:transaction ${HASH} | grep "Status: " | sed "s/Status: //")
         if [[ ${TRANSACTION_STATUS} == "unconfirmed" ]] || [[ ${TRANSACTION_STATUS} == "pending" ]]; then
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}."
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}."
             sleep 20
         elif [[ ${TRANSACTION_STATUS} == "confirmed" ]]; then
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n"
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n"
         elif [[ ${TRANSACTION_STATUS} == "expired" ]]; then
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nThis is not okay, starting from zero.\n"
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nThis is not okay, starting from zero.\n"
         else
-            time_logs "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nUnknown status. Please start from zero.\n"
+            echo -e "hash: ${HASH}, status: ${TRANSACTION_STATUS}.\n\nUnknown status. Please start from zero.\n"
         fi
     done
 }
