@@ -111,7 +111,7 @@ function get_binary() {
 }
 
 cd "$HOME" || exit
-
+echo -e "\n"
 time_logs "Start script with Ironfish quests(mint, burn, send)."
 
 BIN=$(get_binary)
