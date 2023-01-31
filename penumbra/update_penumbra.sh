@@ -54,7 +54,7 @@ function rust_update {
 export version="042-adraste"
 
 
-echo -e "$1/2 Обновляем репозиторий"
+echo -e "1/2 Обновляем репозиторий"
 source_git
 line
 echo -e "2/2 Начинаем билд"
