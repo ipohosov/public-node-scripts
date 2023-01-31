@@ -56,11 +56,8 @@ export version="042-adraste"
 
 echo -e "1/2 Обновляем репозиторий"
 source_git
-line
 echo -e "2/2 Начинаем билд"
 rust_update
-line
 build_penumbra
 reset_wallet
-line
 echo -e "Скрипт завершил свою работу"
