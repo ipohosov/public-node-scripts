@@ -53,10 +53,10 @@ def compare_changes(new_data: list[dict]):
             validation_diff = snd[node_item].get('Validation count') - spd[node_item].get('Validation count')
             all_diff = [eth_diff, gas_diff, token_diff, transaction_diff, validation_diff]
             all_titles = ["ETH", "Gas usage count", "Token transfer count", "Transaction count", "Validation count"]
-            if sum(map(abs, all_diff)) > 0:  # checks if any of the differences is not 0 
+            if sum(map(abs, all_diff)) > 0:  # checks if any of the differences is not 0
                 aggregated_text = ""  # empty string to store the differences
                 entry = 0
-                for diff, title in zip(all_diff, all_titles): # looping through all 
+                for diff, title in zip(all_diff, all_titles):  # looping through all
                     if abs(diff) > 0:
                         # adding difference to the string
                         aggregated_text = aggregated_text + f"{'' if entry ==0 else ', '}{title}: {diff}"
