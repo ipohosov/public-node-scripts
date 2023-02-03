@@ -14,7 +14,7 @@ function delete {
 function massa_backup {
 	cd $HOME
 	if [ ! -d $HOME/massa_backup17/ ]; then
-		mkdir -p $HOME/massa_backup17
+		mkdir -p $HOME/massa_backup19
 		cp $HOME/massa/massa-node/config/node_privkey.key $HOME/massa_backup19/
 		cp $HOME/massa/massa-client/wallet.dat $HOME/massa_backup19/
     cp $HOME/massa/massa-node/config/base_config/config.toml $HOME/massa_backup19/
