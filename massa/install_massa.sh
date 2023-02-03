@@ -11,8 +11,18 @@ function delete {
   rm -rf $HOME/massa
 }
 
+function massa_backup {
+	cd $HOME
+	if [ ! -d $HOME/massa_backup17/ ]; then
+		mkdir -p $HOME/massa_backup17
+		cp $HOME/massa/massa-node/config/node_privkey.key $HOME/massa_backup19/
+		cp $HOME/massa/massa-client/wallet.dat $HOME/massa_backup19/
+    cp $HOME/massa/massa-node/config/base_config/config.toml $HOME/massa_backup19/
+	fi
+}
+
 function install {
-  wget https://github.com/massalabs/massa/releases/download/TEST.19.0/massa_TEST.19.0_release_linux.tar.gz
+  wget https://github.com/massalabs/massa/releases/download/TEST.19.1/massa_TEST.19.1_release_linux.tar.gz
   tar zxvf massa_TEST.19.0_release_linux.tar.gz -C $HOME/
 }
 
@@ -25,9 +35,9 @@ function massa_pass {
   if [ ! ${massa_pass} ]; then
   echo "Введите свой пароль для клиента(придумайте)"
   read massa_pass
-  fi
   echo "export massa_pass=$massa_pass" >> $HOME/.profile
   source $HOME/.profile
+  fi
 }
 
 function systemd {
@@ -57,6 +67,14 @@ function alias {
   echo "alias client='cd $HOME/massa/massa-client/ && $HOME/massa/massa-client/massa-client --pwd $massa_pass && cd'" >> ~/.profile
   echo "alias clientw='cd $HOME/massa/massa-client/ && $HOME/massa/massa-client/massa-client --pwd $massa_pass && cd'" >> ~/.profile
 }
+
+function keys_from_backup {
+	cp $HOME/massa_backup19/wallet.dat $HOME/massa/massa-client/wallet.dat
+	cp $HOME/massa_backup19/node_privkey.key $HOME/massa/massa-node/config/node_privkey.key
+  cp $HOME/massa_backup19/config.toml $$HOME/massa/massa-node/config/base_config/config.toml
+  rm -rf $$HOME/massa/massa-node/config/base_config/bootstrap.json
+}
+  
 
 colors
 massa_pass
