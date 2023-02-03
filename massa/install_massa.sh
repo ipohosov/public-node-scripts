@@ -15,9 +15,9 @@ function massa_backup {
 	cd $HOME
 	if [ ! -d $HOME/massa_backup19/ ]; then
 		mkdir -p $HOME/massa_backup19
-		cp $HOME/massa/massa-node/config/node_privkey.key $HOME/massa_backup19/
-		cp $HOME/massa/massa-client/wallet.dat $HOME/massa_backup19/
-    cp $HOME/massa/massa-node/config/base_config/config.toml $HOME/massa_backup19/
+		cp $HOME/massa/massa-node/config/node_privkey.key $HOME/
+		cp $HOME/massa/massa-client/wallet.dat $HOME/
+    cp $HOME/massa/massa-node/config/base_config/config.toml $HOME/
 	fi
 }
 
@@ -69,9 +69,9 @@ function alias {
 }
 
 function keys_from_backup {
-	cp $HOME/massa_backup19/wallet.dat $HOME/massa/massa-client/wallet.dat
-	cp $HOME/massa_backup19/node_privkey.key $HOME/massa/massa-node/config/node_privkey.key
-  cp $HOME/massa_backup19/config.toml $$HOME/massa/massa-node/config/base_config/config.toml
+	cp $HOME/wallet.dat $HOME/massa/massa-client/wallet.dat
+	cp $HOME/node_privkey.key $HOME/massa/massa-node/config/node_privkey.key
+  cp $HOME/config.toml $$HOME/massa/massa-node/config/base_config/config.toml
   rm -rf $$HOME/massa/massa-node/config/base_config/bootstrap_whitelist.json.json
 }
   
