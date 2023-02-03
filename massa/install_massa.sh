@@ -23,7 +23,7 @@ function massa_backup {
 
 function install {
   wget https://github.com/massalabs/massa/releases/download/TEST.19.1/massa_TEST.19.1_release_linux.tar.gz
-  tar zxvf massa_TEST.19.0_release_linux.tar.gz -C $HOME/
+  tar zxvf massa_TEST.19.1_release_linux.tar.gz -C $HOME/
 }
 
 function routable_ip {
@@ -72,15 +72,17 @@ function keys_from_backup {
 	cp $HOME/massa_backup19/wallet.dat $HOME/massa/massa-client/wallet.dat
 	cp $HOME/massa_backup19/node_privkey.key $HOME/massa/massa-node/config/node_privkey.key
   cp $HOME/massa_backup19/config.toml $$HOME/massa/massa-node/config/base_config/config.toml
-  rm -rf $$HOME/massa/massa-node/config/base_config/bootstrap.json
+  rm -rf $$HOME/massa/massa-node/config/base_config/bootstrap_whitelist.json.json
 }
   
 
 colors
+massa_backup
 massa_pass
 delete
 install
 routable_ip
+keys_from_backup
 systemd
 alias
 echo "Готово, ваш пароль от клиента - $massa_pass"
