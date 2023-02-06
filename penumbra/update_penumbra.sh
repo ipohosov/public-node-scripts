@@ -1,5 +1,11 @@
 #!/bin/bash
 
+function colors {
+  GREEN="\e[1m\e[32m"
+  RED="\e[1m\e[39m"
+  NORMAL="\e[0m"
+}
+
 function install_tools {
   curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/ufw.sh | bash &>/dev/null
   curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/rust.sh | bash &>/dev/null
@@ -33,9 +39,11 @@ function build_penumbra {
   fi
 }
 
-function generate_wallet {
-  cd $HOME/penumbra/
-  pcli keys generate
+function wget_bin_pcli {
+  mkdir -p $HOME/penumbra/target/release/
+  wget -O  $HOME/penumbra/target/release/pcli https://doubletop-bin.ams3.digitaloceanspaces.com/penumbra/$version/pcli
+  sudo chmod +x $HOME/penumbra/target/release/pcli
+  sudo cp $HOME/penumbra/target/release/pcli /usr/bin/pcli
 }
 
 function reset_wallet {
@@ -50,14 +58,14 @@ function rust_update {
 }
 
 
-
-export version="042-adraste"
-
-
-echo -e "1/2 Обновляем репозиторий"
+colors
+export version="043-leda"
+echo -e "${RED}Начинаем обновление ${NORMAL}"
+echo -e "${GREEN}1/2 Обновляем репозиторий ${NORMAL}"
 source_git
-echo -e "2/2 Начинаем билд"
+echo -e "${GREEN}2/2 Начинаем билд ${NORMAL}"
 rust_update
 build_penumbra
+#wget_bin_pcli
 reset_wallet
-echo -e "Скрипт завершил свою работу"
+echo -e "${RED}Скрипт завершил свою работу ${NORMAL}"
