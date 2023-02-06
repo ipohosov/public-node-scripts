@@ -2,7 +2,6 @@ node-modules
 .idea
 *.pyc
 venv/
-.env
 _pycache_
 .vscode
 taiko_results.json
@@ -10,4 +9,5 @@ taiko_results.json
 */.DS_Store
 .DS_Store
 .sqlite.db
-taiko/check_taiko_statistics/.env
+taiko/.env
+/.env.*
