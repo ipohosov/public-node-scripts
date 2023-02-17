@@ -14,7 +14,7 @@ wget https://lamina1.github.io/lamina1/lamina1.latest.ubuntu-latest.tar.gz
 tar -xvzf lamina1.latest.ubuntu-latest.tar.gz
 rm -rf lamina1.latest.ubuntu-latest.tar.gz
 cd lamina1
-curl https://lamina1.github.io/lamina1/config.testnet4.tar | tar xf - ./lamina1-node  --config-file configs/testnet4/default.json
+./lamina1-node --config-file configs/testnet4/default.json
 
 echo "Update configs"
 sed -i -e "s/public-ip-resolution-service/public-ip/g" $HOME/lamina1/configs/testnet4/default.json
