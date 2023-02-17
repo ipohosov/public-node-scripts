@@ -1,13 +1,13 @@
 import re
 from abc import ABC
-from executor.abstract_script import AbstractScript
+from src.abstract_script import AbstractScript
 from ironfish.ironfish_rewards_api import IronfishRewardsAPI
 
 
 class CheckIronfishRewards(AbstractScript, ABC):
 
-    def __init__(self, server):
-        super().__init__(server)
+    def __init__(self):
+        super().__init__()
         self.bin = "docker exec -t ironfish ironfish"
         self.ironfish_api = IronfishRewardsAPI()
 
@@ -29,8 +29,8 @@ class CheckIronfishRewards(AbstractScript, ABC):
             self.server.logger.main_thread(f"First place has {self.ironfish_api.get_top_1_score()} points.")
 
         self.server.logger.info(f"Get graffiti for node {self.server.server_name}.")
-        graffiti = self.server.run_command(f"{self.bin} config:get blockGraffiti", hide=True, pty=True)
-        match = re.search(r'"(.*)"', str(graffiti))
+        graffiti = self.server.run_command(f"{self.bin} config:get blockGraffiti")
+        match = re.search(r'"(.*)"', graffiti)
         graffiti = match.group(1)
         user_id = self.ironfish_api.get_user_id_by_graffiti(graffiti)
         result = self.aggregate_data(user_id)

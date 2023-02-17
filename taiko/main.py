@@ -2,12 +2,15 @@ import contextlib
 import json
 import requests
 
-L2_EXPLORER_TAIKO = "https://l2explorer.a1.taiko.xyz"
+from src.helper import read_file, write_file
+
+L1_EXPLORER_TAIKO = "https://l1explorer.a1.taiko.xyz/"
+L2_EXPLORER_TAIKO = "https://l2explorer.a1.taiko.xyz/"
 
 
-def collect_data(wallet_address: str, node_name: str):
-    node_activity = get_node_activity(wallet_address)
-    balance = get_balance(wallet_address)
+def collect_data(wallet_address: str, node_name: str, explorer_url):
+    node_activity = get_node_activity(wallet_address, explorer_url)
+    balance = get_balance(wallet_address, explorer_url)
     return {"Node name": node_name, "Wallet address": wallet_address, "ETH": balance[-1].get("value"),
             "Gas usage count": node_activity.get("gas_usage_count"),
             "Token transfer count": node_activity.get("token_transfer_count"),
@@ -15,31 +18,17 @@ def collect_data(wallet_address: str, node_name: str):
             "Validation count": node_activity.get("validation_count")}
 
 
-def get_node_activity(wallet_address: str):
-    url = f"{L2_EXPLORER_TAIKO}/address-counters?id={wallet_address}"
+def get_node_activity(wallet_address: str, explorer_url):
+    url = f"{explorer_url}/address-counters?id={wallet_address}"
     return json.loads(requests.request("GET", url, headers={}, data={}).text)
 
 
-def get_balance(wallet_address: str):
-    url = f"{L2_EXPLORER_TAIKO}/address/{wallet_address}/coin-balances/by-day?type=JSON"
+def get_balance(wallet_address: str, explorer_url):
+    url = f"{explorer_url}/address/{wallet_address}/coin-balances/by-day?type=JSON"
     return json.loads(requests.request("GET", url, headers={}, data={}).text)
 
-
-def get_previous_results():
-    with contextlib.suppress(FileNotFoundError):
-        with open('taiko_results.json', 'r') as infile:
-            data = json.load(infile)
-        return data
-    return []
-
-
-def write_results_in_file(taiko_results: list[dict]):
-    with open('taiko_results.json', 'w') as outfile:
-        json.dump(taiko_results, outfile)
-
-
-def compare_changes(new_data: list[dict]):
-    previous_data = get_previous_results()
+def compare_changes(new_data: list[dict], layer_version):
+    previous_data = read_file(f'taiko_results_{layer_version}.json', is_json=True)
     if previous_data:
         sorted_data_previous_data = sorted(previous_data, key=lambda d: d['Wallet address'])
         spd = sorted_data_previous_data
@@ -78,15 +67,15 @@ if __name__ == "__main__":
     with open('.env', 'r') as file:
         wallets = [line.strip() for line in file]
     results = []
-    i = 0
-    for wallet_address in wallets:
-        if i == 0:
-            node_name = "Main node"
-        else:
+    for url, layer_version in zip([L1_EXPLORER_TAIKO, L2_EXPLORER_TAIKO], ["l1", "l2"]):
+        i = 0
+        results = []
+        print(f"\nThe statistics for - {url}\n")
+        for wallet_address in wallets:
             node_name = f"Mult {i}"
-        result = collect_data(wallet_address, node_name)
-        results.append(result)
-        i += 1
+            result = collect_data(wallet_address, node_name, url)
+            results.append(result)
+            i += 1
 
-    compare_changes(results)
-    write_results_in_file(results)
+        compare_changes(results, layer_version)
+        write_file(results, f'taiko_results_{layer_version}.json', is_json=True)

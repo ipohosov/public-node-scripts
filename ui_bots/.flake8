@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 121
+per-file-ignores =
+exclude =
+    # No need to traverse our git directory
+    .git,
+    # There's no value in checking cache directories
+    __pycache__,
+    # Also we want to skip virtual env folders
+    venv
+max-complexity = 10

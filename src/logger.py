@@ -8,6 +8,9 @@ class Logger:
     def error(self, text):
         print(f"{Styles.RED}[{self.log_prefix}][{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text}")
 
+    def warning(self, text):
+        print(f"{Styles.MAGENTA}[{self.log_prefix}][{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text}")
+
     def success(self, text):
         print(f"{Styles.GREEN}[{self.log_prefix}][{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text}")
 
@@ -19,9 +22,6 @@ class Logger:
 
     def extra1(self, text):
         print(f"{Styles.BLUE}[{self.log_prefix}][{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text}")
-
-    def extra2(self, text):
-        print(f"{Styles.MAGENTA}[{self.log_prefix}][{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {text}")
 
 
 class Styles:
