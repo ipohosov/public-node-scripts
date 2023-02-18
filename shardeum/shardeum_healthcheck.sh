@@ -1,10 +1,11 @@
 #! /bin/bash
 
 function login() {
-    TOKEN=$(curl --location --insecure --request POST 'https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/auth/login' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{"password":"${SHARDEUM_DASHBOARD_PWD}"}')
-    echo "${TOKEN}"
+    TOKEN=$(curl --location --insecure --request POST "https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/auth/login" \
+    --header "Content-Type: application/json" \
+    --data-raw '{"password": "'"${SHARDEUM_DASHBOARD_PWD}"'"}')
+    access_token=$(echo "$TOKEN" | jq -r '.accessToken')
+    echo "${access_token}"
 }
 
 
@@ -16,9 +17,9 @@ function get_status() {
 
 function start_node() {
     TOKEN=${1}
-    curl --location --request POST 'https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/api/node/start' \
+    curl --location --insecure --request POST "https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/api/node/start" \
     --header 'Content-Type: application/json' \
-    --header 'X-Api-Token: ${TOKEN}'
+    --header "X-Api-Token: ${TOKEN}"
 }
 
 cd "$HOME" || exit
