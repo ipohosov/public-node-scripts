@@ -26,12 +26,13 @@ IP_ADDRESS=$(wget -qO- http://ipecho.net/plain | xargs echo)
 while true
 do
         printf "Check shardeum node status \n"
-        STATUS=$(get_status)
-        printf "Current status: ${STATUS}"
-        if [[ "${STATUS}" == "stopped" ]]; then
+        NODE_STATUS=$(get_status)
+        printf "Current status: ${NODE_STATUS}"
+        sleep 5s
+        if [[ "${NODE_STATUS}" == "stopped" ]]; then
             printf "Start shardeum node and wait 5 minutes"
-            TOKEN=$(login)
-            start_node "${TOKEN}"
+            JWT_TOKEN=$(login)
+            start_node "${JWT_TOKEN}"
             sleep 5m
         else
             date=$(date +"%H:%M")
