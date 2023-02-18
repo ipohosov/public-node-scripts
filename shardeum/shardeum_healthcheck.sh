@@ -27,6 +27,7 @@ while true
 do
         printf "Check shardeum node status \n"
         STATUS=$(get_status)
+        printf "Current status: ${STATUS}"
         if [[ "$STATUS" == "stopped" ]]; then
             printf "Start shardeum node and wait 5 minutes"
             TOKEN=$(login)
