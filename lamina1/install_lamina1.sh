@@ -16,8 +16,8 @@ rm -rf lamina1.latest.ubuntu-latest.tar.gz
 cd lamina1
 
 echo "Update configs"
-sed -i -e "s/public-ip-resolution-service/public-ip/g" $HOME/lamina1/configs/testnet4/default.json
-sed -i -e "s/opendns/$ADDRESS/g" $HOME/lamina1/configs/testnet4/default.json
+# sed -i -e "s/public-ip-resolution-service/public-ip/g" $HOME/lamina1/configs/testnet4/default.json
+# sed -i -e "s/opendns/$ADDRESS/g" $HOME/lamina1/configs/testnet4/default.json
 
 #service
 sudo tee /etc/systemd/system/lamina1.service > /dev/null <<EOF
@@ -27,7 +27,7 @@ After=network-online.target
 [Service]
 User=root
 WorkingDirectory=/root/lamina1
-ExecStart=/root/lamina1/lamina1-node  --config-file /root/lamina1/configs/testnet4/default.json
+ExecStart=/root/lamina1/lamina1-node --config-file /root/lamina1/configs/testnet/default.json
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=65535
