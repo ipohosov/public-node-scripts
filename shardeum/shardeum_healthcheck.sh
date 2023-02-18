@@ -23,6 +23,7 @@ function start_node() {
 }
 
 cd "$HOME" || exit
+source .profile
 IP_ADDRESS=$(wget -qO- http://ipecho.net/plain | xargs echo)
 while true
 do
