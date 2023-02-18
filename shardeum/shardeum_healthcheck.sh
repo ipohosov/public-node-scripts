@@ -1,9 +1,11 @@
 #! /bin/bash
 
 function login() {
-    TOKEN=$(curl --location --insecure --request POST "https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/auth/login" \
+    DASHPORT=${1}
+    DASHPASS=${2}
+    TOKEN=$(curl --location --insecure --request POST "https://${IP_ADDRESS}:${DASHPORT}/auth/login" \
     --header "Content-Type: application/json" \
-    --data-raw '{"password": "'"${SHARDEUM_DASHBOARD_PWD}"'"}')
+    --data-raw '{"password": "'"${DASHPASS}"'"}')
     access_token=$(echo "${TOKEN}" | jq -r '.accessToken')
     echo "${access_token}"
 }
@@ -17,7 +19,8 @@ function get_status() {
 
 function start_node() {
     TOKEN=${1}
-    curl --location --insecure --request POST "https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/api/node/start" \
+    DASHPORT=${2}
+    curl --location --insecure --request POST "https://${IP_ADDRESS}:${DASHPORT}/api/node/start" \
     --header 'Content-Type: application/json' \
     --header "X-Api-Token: ${TOKEN}"
 }
@@ -25,21 +28,23 @@ function start_node() {
 cd "$HOME" || exit
 source .profile
 IP_ADDRESS=$(wget -qO- http://ipecho.net/plain | xargs echo)
+DASHPASS=$(cat "$HOME"/.shardeum/.env | grep DASHPASS | sed -n 's/^DASHPASS=\(.*\)$/\1/p')
+DASHPORT=$(cat "$HOME"/.shardeum/.env | grep DASHPASS | sed -n 's/^DASHPORT=\(.*\)$/\1/p')
 while true
 do
-        printf "Check shardeum node status \n"
-        NODE_STATUS=$(get_status)
-        printf "Current status: ${NODE_STATUS}\n"
-        sleep 5s
-        if [[ "${NODE_STATUS}" =~ "stopped" ]]; then
-            printf "Start shardeum node and wait 5 minutes\n"
-            JWT_TOKEN=$(login)
-            start_node "${JWT_TOKEN}"
-            sleep 5m
-        else
-            date=$(date +"%H:%M")
-            echo "Last Update: ${date}"
-            printf "Sleep 15 minutes\n"
-            sleep 15m
-        fi
+    printf "Check shardeum node status \n"
+    NODE_STATUS=$(get_status)
+    printf "Current status: ${NODE_STATUS}\n"
+    sleep 5s
+    if [[ "${NODE_STATUS}" =~ "stopped" ]]; then
+        printf "Start shardeum node and wait 5 minutes\n"
+        JWT_TOKEN=$(login "${DASHPORT}" "${DASHPASS}")
+        start_node "${JWT_TOKEN}" "${DASHPORT}"
+        sleep 5m
+    else
+        date=$(date +"%H:%M")
+        echo "Last Update: ${date}"
+        printf "Sleep 15 minutes\n"
+        sleep 15m
+    fi
 done
