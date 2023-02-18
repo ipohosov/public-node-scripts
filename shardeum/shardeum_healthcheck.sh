@@ -4,7 +4,7 @@ function login() {
     TOKEN=$(curl --location --insecure --request POST "https://${IP_ADDRESS}:${SHARDEUM_DASHBOARD_PORT}/auth/login" \
     --header "Content-Type: application/json" \
     --data-raw '{"password": "'"${SHARDEUM_DASHBOARD_PWD}"'"}')
-    access_token=$(echo "$TOKEN" | jq -r '.accessToken')
+    access_token=$(echo "${TOKEN}" | jq -r '.accessToken')
     echo "${access_token}"
 }
 
