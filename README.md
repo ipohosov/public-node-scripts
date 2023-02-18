@@ -42,6 +42,13 @@ tmux new-session -d -s bundlr_healthcheck 'bash <(curl -s https://raw.githubuser
 tmux kill-session -t bundlr_healthcheck
 ```
 
+### 4. shardeum healthcheck
+
+1. Start tmux session
+```
+tmux new-session -d -s shardeum_healthcheck 'bash <(curl -s  https://github.com/ipohosov/public-node-scripts/blob/main/shardeum/shardeum_healthcheck.sh)'
+```
+
 ## Usefull commands
 1. Check the list of active tmux sessions:
 ```
