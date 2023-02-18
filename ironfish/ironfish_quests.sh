@@ -85,7 +85,7 @@ function check_results() {
 function get_binary() {
     BINARY=$(which ironfish)
     if [[ ${BINARY} == "" ]]; then
-        CONTAINER_NAME=$(docker ps | grep ironfish | awk '{ print $1 }')
+        CONTAINER_NAME=$(docker ps | grep ironfish | grep -wv run | awk '{ print $1 }')
         DOCKER_TEST=$(docker exec -it "${CONTAINER_NAME}" ironfish)
         if [[ ${DOCKER_TEST} == *"Error"* ]]; then
             time_logs "I don't know where is your 'ironfish' binary. You can't use this script."
