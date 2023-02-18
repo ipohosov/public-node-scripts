@@ -34,7 +34,6 @@ do
         if [[ "${NODE_STATUS}" =~ "stopped" ]]; then
             printf "Start shardeum node and wait 5 minutes\n"
             JWT_TOKEN=$(login)
-            printf "JWT token ${JWT_TOKEN}\n"
             start_node "${JWT_TOKEN}"
             sleep 5m
         else
