@@ -10,7 +10,7 @@ function login() {
 
 function get_status() {
     STATUS=$(docker exec -t shardeum-dashboard operator-cli status | grep state | awk '{ print $2 }')
-    echo "${BINARY}"
+    echo "${STATUS}"
 }
 
 
