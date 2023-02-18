@@ -28,11 +28,12 @@ while true
 do
         printf "Check shardeum node status \n"
         NODE_STATUS=$(get_status)
-        printf "Current status: ${NODE_STATUS}"
+        printf "Current status: ${NODE_STATUS}\n"
         sleep 5s
         if [[ "${NODE_STATUS}" == "stopped" ]]; then
-            printf "Start shardeum node and wait 5 minutes"
+            printf "Start shardeum node and wait 5 minutes\n"
             JWT_TOKEN=$(login)
+            printf "JWT token ${JWT_TOKEN}\n"
             start_node "${JWT_TOKEN}"
             sleep 5m
         else
