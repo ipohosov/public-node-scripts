@@ -30,7 +30,7 @@ do
         NODE_STATUS=$(get_status)
         printf "Current status: ${NODE_STATUS}\n"
         sleep 5s
-        if [[ "${NODE_STATUS}" == "stopped" ]]; then
+        if [[ "${NODE_STATUS}" =~ "stopped" ]]; then
             printf "Start shardeum node and wait 5 minutes\n"
             JWT_TOKEN=$(login)
             printf "JWT token ${JWT_TOKEN}\n"
