@@ -27,7 +27,7 @@ After=network-online.target
 [Service]
 User=root
 WorkingDirectory=/root/lamina1
-ExecStart=/root/lamina1/lamina1-node  --config-file /root/lamina1/configs/testnet/default.json
+ExecStart=/root/lamina1/lamina1-node  --config-file /root/lamina1/configs/testnet4/default.json
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=65535
