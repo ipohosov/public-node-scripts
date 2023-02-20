@@ -28,15 +28,13 @@ function start_node() {
 cd "$HOME" || exit
 source .profile
 IP_ADDRESS=$(wget -qO- http://ipecho.net/plain | xargs echo)
-DASHPASS=$(cat "$HOME"/.shardeum/.env | grep DASHPASS | sed -n 's/^DASHPASS=\(.*\)$/\1/p')
-DASHPORT=$(cat "$HOME"/.shardeum/.env | grep DASHPASS | sed -n 's/^DASHPORT=\(.*\)$/\1/p')
+DASHPASS=$(cat "$HOME"/.shardeum/.env | grep DASHPASS | cut -d= -f2)
+DASHPORT=$(cat "$HOME"/.shardeum/.env | grep DASHPORT | cut -d= -f2)
 while true
 do
     printf "Check shardeum node status \n"
     NODE_STATUS=$(get_status)
     printf "Current status: ${NODE_STATUS}\n"
-    printf "Dashboard pass: ${DASHPASS}\n"
-    printf "Dashboard port: ${DASHPORT}\n"
     sleep 5s
     if [[ "${NODE_STATUS}" =~ "stopped" ]]; then
         printf "Start shardeum node and wait 5 minutes\n"
