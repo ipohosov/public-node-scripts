@@ -1,4 +1,3 @@
-import re
 from abc import ABC
 from src.abstract_script import AbstractScript
 from ironfish.ironfish_rewards_api import IronfishRewardsAPI
@@ -14,8 +13,10 @@ class CheckIronfishRewards(AbstractScript, ABC):
     def aggregate_data(self, user_id):
         short_data = self.ironfish_api.get_short_data(user_id)
         detailed_data = self.ironfish_api.get_detailed_data(user_id)
+        total_hours = detailed_data.get("node_uptime").get("total_hours") + \
+                      detailed_data.get("metrics").get("node_uptime").get("count") * 12
         return {"Rank": detailed_data.get("pools").get("main").get("rank"),
-                "Total_points": short_data.get("total_points"),
+                "Total_points": short_data.get("total_points"), "Total_hours": total_hours,
                 "Node_uptime_points": detailed_data.get("metrics").get("node_uptime").get("points"),
                 "Mint_points": detailed_data.get("metrics").get("multi_asset_mint").get("points"),
                 "Burn_points": detailed_data.get("metrics").get("multi_asset_burn").get("points"),
@@ -30,8 +31,6 @@ class CheckIronfishRewards(AbstractScript, ABC):
 
         self.server.logger.info(f"Get graffiti for node {self.server.server_name}.")
         graffiti = self.server.run_command(f"{self.bin} config:get blockGraffiti")
-        match = re.search(r'"(.*)"', graffiti)
-        graffiti = match.group(1)
         user_id = self.ironfish_api.get_user_id_by_graffiti(graffiti)
         result = self.aggregate_data(user_id)
         self.server.logger.success(f"Results for graffiti: {graffiti}. {result}")
