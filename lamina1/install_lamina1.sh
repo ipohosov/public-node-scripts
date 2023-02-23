@@ -6,7 +6,9 @@ cd lamina1
 
 wget https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/lamina1/Dockerfile
 
-docker build -t lamina1-node:latest .
+IP_ADDRESS=$(wget -qO- http://ipecho.net/plain | xargs echo)
+
+docker build --build-arg PUBLIC_IP="${IP_ADDRESS}" -t lamina1-node:latest .
 
 docker run -d --restart unless-stopped \
               --name lamina1-node-testnet \

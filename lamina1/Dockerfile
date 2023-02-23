@@ -4,9 +4,10 @@ FROM ubuntu:22.04
 ## https://docs.lamina1.network/docs/userguide/#running-a-lamina1-node
 
 ENV LAMINA1_BINARY=https://lamina1.github.io/lamina1/lamina1.latest.ubuntu-latest.tar.gz
-
+ENV LAMINA1_CONFIGS=https://lamina1.github.io/lamina1/config.testnet.tar
 ENV DATA_DIR /data
 ENV LAMINA1_DIR /lamina1
+ARG PUBLIC_IP
 
 RUN groupadd -g 2000 -r node \
   && useradd -u 1001 -r -m -g node node \
@@ -25,9 +26,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR ${LAMINA1_DIR}
 RUN curl ${LAMINA1_BINARY} | tar xzf - --strip-components=1
+RUN curl ${LAMINA1_CONFIGS} | tar xf -
 
 USER "node"
-ENTRYPOINT ["./lamina1-node"]
+ENTRYPOINT ["./lamina1-node --config-file configs/testnet/default.json --public-ip=${PUBLIC_IP}"]
 
 # Expose default ports: 9650(API) and 9671(P2P)
 EXPOSE 9671 9650
