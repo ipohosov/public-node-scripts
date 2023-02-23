@@ -19,6 +19,7 @@ RUN groupadd -g 2000 -r node \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+    wget \
     netcat \
     jq \
   && apt-get clean \
