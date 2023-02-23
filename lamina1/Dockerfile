@@ -26,7 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR ${LAMINA1_DIR}
 RUN curl ${LAMINA1_BINARY} | tar xzf - --strip-components=1
-RUN wget ${LAMINA1_CONFIGS4} | tar -xvf config.testnet4.tar
+RUN wget ${LAMINA1_CONFIGS4}
+RUN tar -xvf config.testnet4.tar
 
 USER "node"
 ENTRYPOINT ["./lamina1-node --config-file configs/testnet4/default.json --public-ip=$PUBLIC_IP"]
