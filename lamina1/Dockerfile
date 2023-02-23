@@ -26,8 +26,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR ${LAMINA1_DIR}
 RUN curl ${LAMINA1_BINARY} | tar xzf - --strip-components=1
-RUN curl https://lamina1.github.io/lamina1/lamina1.latest.ubuntu-latest.tar.gz | tar xzf - --strip-components=1
-
 RUN wget ${LAMINA1_CONFIGS4} | tar -xvf config.testnet4.tar
 
 USER "node"
