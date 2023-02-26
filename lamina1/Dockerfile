@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN echo "$PUBLIC_IP"
-
+RUN chmod -R 777 /root/lamina1
 # ENTRYPOINT ["./lamina1-node --config-file configs/testnet4/default.json --public-ip=$PUBLIC_IP"]
 ENTRYPOINT ["./lamina1-node --config-file configs/testnet4/default.json"]
 
