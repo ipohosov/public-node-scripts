@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  lamina1-first-start:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - /root/.lamina1:/root/.lamina1
+
+  lamina1-main:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.main
+      args:
+        PUBLIC_IP: ${PUBLIC_IP}
+    restart: unless-stopped
+    volumes:
+      - /root/.lamina1:/root/.lamina1
+
+volumes:
+  lamina1-testnet-data:

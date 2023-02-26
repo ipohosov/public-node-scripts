@@ -12,3 +12,6 @@ _pycache_
 taiko_results_l*.json
 taiko/.env
 .env*
+sui/frenemies/mnemonics.txt
+sui/frenemies/wallets.csv
+sui/sui-mint-testnet-2/wallets.txt
