@@ -133,41 +133,41 @@ class UpdateMassa(AbstractScript, ABC):
         result = self.server.run_command("python --version",expected_exit=True)
         if "Python 3.10" in result:
             self.server.logger.success("Python 3.10 is arleady installed.")
-            return
-        self.server.logger.info("Install python 3.10")
-        self.server.run_command("sudo apt update")
-        self.server.run_command("sudo apt install software-properties-common -y")
-        self.server.run_command("sudo add-apt-repository ppa:deadsnakes/ppa -y")
-        self.server.run_command("sudo apt update")
-        self.server.run_command("sudo apt install python3.10 -y")
-        command = "sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1"
-        self.server.run_command(command)
-        result = self.server.run_command("python --version")
-        self.server.logger.success(f"{result}")
-        # self.server.logger.info(f"Start updating massa to {self.version} version")
-        # massa_status = self.get_massa_status()
-        # if massa_status == NodeStatus.ABSENT:
-        #     self.server.logger.error(f"Massa is not installed. You need to install it at first.")
-        #     raise SystemExit
-        # massa_pwd = self.get_massa_pass()
-        # massa_address = self.get_address(massa_pwd)
-        # massa_version = self.get_massa_verion(massa_pwd)
-        # if massa_version in self.version:
-        #     self.server.logger.success("Your node has actual version. Don't need to update it. "
-        #                                f"The status of node is{str(massa_status).replace('NodeStatus.', ' ')}. "
-        #                                "If it's Freezed you need to restart it. Command 'systemctl restart massa'.")
-        #     raise SystemExit
-        #
-        # self.set_env_variables()
-        # self.backup_massa()
-        # self.download_binary()
-        # self.update_config_file()
-        # self.restore_massa()
-        # self.start_massa()
-        # self.wait_till_bootstraped()
-        # self.faucet_tokens(massa_address)
-        # self.wait_tokens(massa_pwd)
-        # self.start_staking(massa_pwd, massa_address)
-        # self.buy_rolls(massa_pwd, massa_address)
-        # self.register_node()
-        # self.server.logger.success(f"Massa version {massa_version}")
+        else:
+            self.server.logger.info("Install python 3.10")
+            self.server.run_command("sudo apt update")
+            self.server.run_command("sudo apt install software-properties-common -y")
+            self.server.run_command("sudo add-apt-repository ppa:deadsnakes/ppa -y")
+            self.server.run_command("sudo apt update")
+            self.server.run_command("sudo apt install python3.10 -y")
+            command = "sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1"
+            self.server.run_command(command)
+            result = self.server.run_command("python --version")
+            self.server.logger.success(f"{result}")
+        self.server.logger.info(f"Start updating massa to {self.version} version")
+        massa_status = self.get_massa_status()
+        if massa_status == NodeStatus.ABSENT:
+            self.server.logger.error(f"Massa is not installed. You need to install it at first.")
+            raise SystemExit
+        massa_pwd = self.get_massa_pass()
+        massa_address = self.get_address(massa_pwd)
+        massa_version = self.get_massa_verion(massa_pwd)
+        if massa_version in self.version:
+            self.server.logger.success("Your node has actual version. Don't need to update it. "
+                                       f"The status of node is{str(massa_status).replace('NodeStatus.', ' ')}. "
+                                       "If it's Freezed you need to restart it. Command 'systemctl restart massa'.")
+            raise SystemExit
+
+        self.set_env_variables()
+        self.backup_massa()
+        self.download_binary()
+        self.update_config_file()
+        self.restore_massa()
+        self.start_massa()
+        self.wait_till_bootstraped()
+        self.faucet_tokens(massa_address)
+        self.wait_tokens(massa_pwd)
+        self.start_staking(massa_pwd, massa_address)
+        self.buy_rolls(massa_pwd, massa_address)
+        self.register_node()
+        self.server.logger.success(f"Massa version {massa_version}")
