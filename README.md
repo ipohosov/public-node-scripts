@@ -71,7 +71,7 @@ Update
 ```
 bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/guides/main/massa/update.sh)
 ```
-2. Create wallet and stake
+2. Wait bootstrapping and create wallet and stake
 ```
 bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/create_and_stake.sh)
 ```

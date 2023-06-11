@@ -19,9 +19,16 @@ sed -i -e "s%retry_delay *=.*%retry_delay = 10000%; " "$config_path"
 # Get node id
 node_id=$(/root/massa/massa-client/massa-client --pwd $massa_pass get_status | grep "Node's ID" | grep -v "IP address" | awk '{print $3}')
 
+# Restart massa
+systemctl restart massa
+sleep 30
+
 # Register node in discord
 echo "Your ip is $server_ip"
 echo "Enter discord id:"
 read discord_id
 
 /root/massa/massa-client/massa-client --pwd $massa_pass node_testnet_rewards_program_ownership_proof $massa_wallet $discord_id
+
+# Print the node info for botstrap
+echo '["[$server_ip]:31245", "$node_id"],'
