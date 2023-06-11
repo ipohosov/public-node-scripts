@@ -59,3 +59,20 @@ tmux ls
 tmux attach -t session_name
 ```
 To deattach from session press CTRL+B and then D.
+
+### 5. Massa setup
+
+1. Create wallet and stake
+```
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/create_and_stake.sh)
+```
+2. Go to discord for faucet
+3. Buy rolls, edit config.toml, remove bootstrap_whitelist.json, register node in discord. The command depands on ip version
+```
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/buy_rolls_and_register_ip4.sh)
+```
+or
+```
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/buy_rolls_and_register_ip6.sh)
+```
+4. Go to discord and post output
