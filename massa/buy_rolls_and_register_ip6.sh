@@ -16,9 +16,12 @@ rm -rf /root/massa/massa-node/base_config/bootstrap_whitelist.json
 # Update retry_delay
 sed -i -e "s%retry_delay *=.*%retry_delay = 10000%; " "$config_path"
 
-
 # Get node id
 node_id=$(/root/massa/massa-client/massa-client --pwd $massa_pass get_status | grep "Node's ID" | grep -v "IP address" | awk '{print $3}')
+
+# Restart massa
+systemctl restart massa
+sleep 30
 
 # Register node in discord
 echo "Your ip is $server_ip"
