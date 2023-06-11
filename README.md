@@ -61,7 +61,8 @@ tmux attach -t session_name
 To deattach from session press CTRL+B and then D.
 
 ### 5. Massa setup
-1. Update or install massa 
+1. Update or install massa
+
 Setup
 ```
 bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/guides/main/massa/clear_massa.sh)
