@@ -85,4 +85,5 @@ or
 bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/buy_rolls_and_register_ip6.sh)
 ```
 5. Go to discord and post output
+
 Thanks Double Top team for installation/update script
