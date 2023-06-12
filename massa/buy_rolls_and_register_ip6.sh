@@ -31,4 +31,4 @@ read discord_id
 /root/massa/massa-client/massa-client --pwd $massa_pass node_testnet_rewards_program_ownership_proof $massa_wallet $discord_id
 
 # Print the node info for botstrap
-echo '["[$server_ip]:31245", "$node_id"],'
+echo "[\"[$server_ip]:31245\", \"$node_id\"],"
