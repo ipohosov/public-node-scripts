@@ -71,19 +71,9 @@ Update
 ```
 bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/guides/main/massa/update.sh)
 ```
-2. Wait bootstrapping and create wallet and stake
+2. Wait bootstrapping and configure massa
 ```
-bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/create_and_stake.sh)
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/massa_configuration.sh)
 ```
-3. Go to discord for faucet
-4. Buy rolls, edit config.toml, remove bootstrap_whitelist.json, register node in discord. The command depands on ip version
-```
-bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/buy_rolls_and_register_ip4.sh)
-```
-or
-```
-bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/buy_rolls_and_register_ip6.sh)
-```
-5. Go to discord and post output
 
 Thanks Double Top team for installation/update script
