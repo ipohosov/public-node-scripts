@@ -25,11 +25,12 @@ function configure {
 	echo "Get IP and replace routable ip"
 	ifconfig | grep -q 'inet6'
 	if [[ $? -eq 0 ]]; then
-		echo "Get IPv6"
 		server_ip=$(ifconfig | grep inet6 | grep global | awk '{print $2}')
+		echo "Get IPv6 - $server_ip"
+		
 	else
-		echo "Get IPv4"
 		server_ip=$(hostname -I | awk '{print $1}')
+		echo "Get IPv4 - $server_ip"
 	fi
 
 	config_path="$HOME/massa/massa-node/base_config/config.toml"
@@ -49,7 +50,7 @@ function wait_bootstrap {
 	while true
 	do
 		printf "Check massa logs \n"
-		if [ "$(journalctl -n 50 -u massa --no-pager | grep -c "final_state hash at slot")" -gt 1 ]; then
+		if [ "$(journalctl -n 50 -u massa --no-pager | grep -c 'final_state hash at slot')" -gt 1 ]; then
 			break
 		fi
 		sleep 10s
@@ -61,6 +62,8 @@ function setup_wallet {
 	echo "Create a wallet"
 	cd /root/massa/massa-client/ 
 	./massa-client --pwd $massa_pass wallet_generate_secret_key > /dev/null
+
+	sleep 5s
 
 	wallet_info=$(./massa-client --pwd $massa_pass wallet_info)
 
