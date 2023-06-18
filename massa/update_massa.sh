@@ -61,22 +61,20 @@ function setup_wallet {
 	# Create a wallet
 	echo "Create a wallet"
 	cd /root/massa/massa-client/ 
-	./massa-client --pwd $massa_pass wallet_generate_secret_key > /dev/null
+	./massa-client --pwd $massa_pass wallet_generate_secret_key
 
 	sleep 5s
 
 	wallet_info=$(./massa-client --pwd $massa_pass wallet_info)
 
 	if [[ $wallet_info =~ Address:\ ([A-Za-z0-9]+) ]]; then
-	massa_wallet="${BASH_REMATCH[1]}"
-	else
-	echo "No match found."
+		massa_wallet="${BASH_REMATCH[1]}"
 	fi
 
 	echo "Massa wallet: $massa_wallet"
 	
 	# Start staking 
-	./massa-client --pwd $massa_pass node_start_staking $massa_wallet > /dev/null
+	./massa-client --pwd $massa_pass node_start_staking $massa_wallet
 
 	# Waiting faucet
 	echo "Go to discord to the faucet"
@@ -95,7 +93,7 @@ function setup_wallet {
 
 	# Buy roll 
 	echo "Buy roll"
-	./massa-client --pwd $massa_pass buy_rolls $massa_wallet 1 0  > /dev/null
+	./massa-client --pwd $massa_pass buy_rolls $massa_wallet 1 0
 }
 
 function register_discord {
