@@ -51,6 +51,7 @@ function wait_bootstrap {
   do
     printf "Check massa logs \n"
     if [ "$(journalctl -n 50 -u massa --no-pager | grep -c 'final_state hash at slot')" -gt 1 ]; then
+	  echo "The node is bootstrapped"
       break
     fi
     sleep 10s
@@ -69,6 +70,9 @@ function setup_wallet {
 
   if [[ $wallet_info =~ Address:\ ([A-Za-z0-9]+) ]]; then
     massa_wallet="${BASH_REMATCH[1]}"
+  else
+	echo "The wallet was not found"
+    exit
   fi
 
   echo "Massa wallet: $massa_wallet"
