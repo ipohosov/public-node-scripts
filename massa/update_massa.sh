@@ -50,11 +50,11 @@ function wait_bootstrap {
   while true
   do
     printf "Check massa logs \n"
-    if [ "$(journalctl -n 50 -u massa --no-pager | grep -c 'final_state hash at slot')" -gt 1 ]; then
+    if [ "$(journalctl -n 5 -u massa --no-pager | grep -c 'final_state hash at slot')" -gt 1 ]; then
 	  echo "The node is bootstrapped"
       break
     fi
-    sleep 10s
+    sleep 5s
   done
 }
 
