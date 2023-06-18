@@ -141,6 +141,7 @@ install
 configure
 sudo systemctl start massa
 wait_bootstrap
+sleep 30s
 setup_wallet
 register_discord
 postconditions
