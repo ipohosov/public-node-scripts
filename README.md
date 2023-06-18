@@ -65,11 +65,11 @@ To deattach from session press CTRL+B and then D.
 
 Setup
 ```
-bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/guides/main/massa/clear_massa.sh)
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/install_massa.sh)
 ```
 Update
 ```
-bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/guides/main/massa/update.sh)
+bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/massa/update_massa.sh)
 ```
 2. Wait bootstrapping and configure massa
 ```
