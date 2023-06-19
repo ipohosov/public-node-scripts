@@ -105,55 +105,7 @@ function postconditions {
 
 }
 
-#add ufw rules
-curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/ufw.sh | bash
-
-sudo apt update
-curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/rust.sh | bash
-
-#
-source $HOME/.cargo/env
-sleep 1
-apt install cmake -y
-rustup toolchain install nightly
-rustup default nightly
-cd $HOME
-if [ ! -d $HOME/massa/ ]; then
-	git clone https://github.com/massalabs/massa
-	cd $HOME/massa && git checkout TEST.23.2
-fi
-cd $HOME/massa/massa-node/
-cargo build --release
-sed -i "s/ip *=.*/ip = \"127\.0\.0\.1\"/" "$HOME/massa/massa-client/base_config/config.toml"
-sed -i "s/^bind_private *=.*/bind_private = \"127\.0\.0\.1\:33034\"/" "$HOME/massa/massa-node/base_config/config.toml"
-sed -i "s/^bind_public *=.*/bind_public = \"0\.0\.0\.0\:33035\"/" "$HOME/massa/massa-node/base_config/config.toml"
-
-sudo tee <<EOF >/dev/null /etc/systemd/system/massa.service
-[Unit]
-Description=Massa Node
-After=network-online.target
-[Service]
-User=$USER
-Restart=always
-RestartSec=3
-LimitNOFILE=65535
-WorkingDirectory=$HOME/massa/massa-node
-ExecStart=$HOME/massa/target/release/massa-node
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo tee <<EOF >/dev/null /etc/systemd/journald.conf
-Storage=persistent
-EOF
-
-sudo systemctl restart systemd-journald
-sudo systemctl enable massa
-sudo systemctl daemon-reload
-sudo systemctl restart massa
-
-echo "alias client='cd $HOME/massa/massa-client/ && cargo run --release && cd'" >> ~/.profile
-echo "alias clientw='cd $HOME/massa/massa-client/; cargo run -- --wallet wallet.dat; cd'" >> ~/.profile
+bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/guides/main/massa/clear_massa.sh)
 
 configure
 sudo systemctl start massa
