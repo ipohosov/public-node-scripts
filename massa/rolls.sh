@@ -11,8 +11,9 @@ do
                 echo "Less than 1 Final Roll"
                 resp=$(./massa-client --pwd $massa_pass buy_rolls $massa_wallet_address 1 0)
                 echo $resp
-        elif [ $int_balance -gt "1" ]; then
-                echo "More than 1 Final Roll"
         fi
+        date=$(date +"%H:%M")
+        echo Last Update: ${date}
         sleep 2m
+        printf "\n"
 done
