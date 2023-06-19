@@ -114,6 +114,7 @@ curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/rust.sh | bash
 #
 source $HOME/.cargo/env
 sleep 1
+apt install cmake -y
 rustup toolchain install nightly
 rustup default nightly
 cd $HOME
