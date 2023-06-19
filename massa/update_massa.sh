@@ -88,7 +88,7 @@ function setup_wallet {
   balance=$(./massa-client --pwd $massa_pass wallet_info | grep "Balance" | awk '{ print $3 }' | sed 's/candidate=//;s/,//')
   int_balance=${balance%%.*}
   if [ $int_balance -lt "1" ]; then
-    sleep 5s
+    sleep 10s
     echo "."
   elif [ $int_balance -gt "1" ]; then
     break
