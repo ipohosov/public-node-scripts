@@ -148,6 +148,6 @@ wait_bootstrap
 sleep 30s
 setup_wallet
 register_discord
-postconditions
 sudo systemctl restart massa
 wait_bootstrap
+postconditions
