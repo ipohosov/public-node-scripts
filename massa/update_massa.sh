@@ -15,23 +15,23 @@ function delete {
 }
 
 function install {
-  wget https://github.com/massalabs/massa/releases/download/TEST.23.2/massa_TEST.23.2_release_linux.tar.gz
-  tar zxvf massa_TEST.23.2_release_linux.tar.gz -C $HOME/
+  wget https://github.com/massalabs/massa/releases/download/TEST.24.1/massa_TEST.24.1_release_linux.tar.gz
+  tar zxvf massa_TEST.24.1_release_linux.tar.gz -C $HOME/
   rm -rf massa_TEST.*
 }
 
 function configure {
   # Get IP and replace routable ip
   echo "Get IP and replace routable ip"
-  ifconfig | grep -q 'inet6'
-  if [[ $? -eq 0 ]]; then
-    server_ip=$(ifconfig | grep inet6 | grep global | awk '{print $2}')
-    echo "Get IPv6 - $server_ip"
+  # ifconfig | grep -q 'inet6'
+  # if [[ $? -eq 0 ]]; then
+  #   server_ip=$(ifconfig | grep inet6 | grep global | awk '{print $2}')
+  #   echo "Get IPv6 - $server_ip"
     
-  else
-    server_ip=$(hostname -I | awk '{print $1}')
-    echo "Get IPv4 - $server_ip"
-  fi
+  # else
+  server_ip=$(hostname -I | awk '{print $1}')
+  echo "Get IPv4 - $server_ip"
+  # fi
 
   config_path="$HOME/massa/massa-node/base_config/config.toml"
   sed -i 's/.*routable_ip/# \0/' $config_path
@@ -115,16 +115,8 @@ function postconditions {
 
   # Get IP
   echo "Get IP"
-  ifconfig | grep -q 'inet6'
-  if [[ $? -eq 0 ]]; then
-    server_ip=$(ifconfig | grep inet6 | grep global | awk '{print $2}')
-    echo "Get IPv6 $server_ip"
-  else
-    server_ip=$(hostname -I | awk '{print $1}')
-    echo "Get IPv4 $server_ip"
-  fi
-
-
+  echo "Get IPv4 $server_ip"
+  
   # Setup extra scripts
   echo "The current active scripts"
   tmux kill-session -t rolls  > /dev/null
@@ -135,7 +127,7 @@ function postconditions {
 
   # Print the node info for botstrap
   echo "Node data for bootstrap"
-  echo "[\"[$server_ip]:31245\", \"$node_id\"]"
+  echo "[\"$server_ip:31245\", \"$node_id\"]"
 
 }
 
