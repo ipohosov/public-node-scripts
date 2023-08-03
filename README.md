@@ -77,3 +77,17 @@ bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/ma
 ```
 
 Thanks Double Top team for installation/update script
+
+### 6. holograph_healthcheck
+1. Install tmux:
+```
+apt install tmux -y
+```
+2. Start tmux session:
+```
+tmux new-session -d -s holograph_healthcheck 'bash <(curl -s https://raw.githubusercontent.com/ipohosov/public-node-scripts/main/holograph/holograph_healthcheck.sh)'
+```
+3. Remove session
+```
+tmux kill-session -t holograph_healthcheck
+```

@@ -24,7 +24,7 @@ class CheckAlchemyCU(AbstractScript, ABC):
                 email = data[1]
                 password = data[2]
 
-                self.server.logger.info(f"Get token for account with email - {email}.")
+                # self.server.logger.info(f"Get token for account with email - {email}.")
                 request = "--request POST 'https://auth.alchemy.com/api/login'"
                 headers = "--header 'Content-Type: application/json;charset=UTF-8'"
                 data_raw_json = {"email": email, "password": password, "redirectUrl": "https://dashboard.alchemy.com"}
@@ -34,7 +34,7 @@ class CheckAlchemyCU(AbstractScript, ABC):
                 token = json.loads(self.server.run_command(auth_curl,
                                                            hide=True, pty=True)).get("redirectTo").split("=")[1]
 
-                self.server.logger.info(f"Get CU usage for account with email - {email}.")
+                # self.server.logger.info(f"Get CU usage for account with email - {email}.")
                 cu_usage_curl = "curl --location --request GET 'https://dashboard.alchemy.com/api/team-fcu-usage' " \
                                 f"--header 'authorization: Bearer {token}'"
                 cu_usage_data = json.loads(self.server.run_command(cu_usage_curl,
