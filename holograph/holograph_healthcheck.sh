@@ -4,7 +4,7 @@ cd "$HOME" || exit
 while true
 do
     printf "Check holograph logs \n"
-    if [ "$(journalctl -n 100 -u holographd --no-pager | grep -c "Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory")" -gt 5 ]; then
+    if [ "$(journalctl -n 100 -u holographd --no-pager | grep -c "Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory")" -gt 0 ]; then
         printf "Restart holograph ...................................\n"
         sudo systemctl restart holographd
     fi
