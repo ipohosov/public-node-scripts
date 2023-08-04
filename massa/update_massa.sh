@@ -15,7 +15,7 @@ function delete {
 }
 
 function install {
-  wget https://github.com/massalabs/massa/releases/download/TEST.24.1/massa_TEST.25.2_release_linux.tar.gz
+  wget https://github.com/massalabs/massa/releases/download/TEST.25.2/massa_TEST.25.2_release_linux.tar.gz
   tar zxvf massa_TEST.25.2_release_linux.tar.gz -C $HOME/
   rm -rf massa_TEST.*
 }
