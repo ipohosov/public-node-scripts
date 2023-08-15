@@ -152,7 +152,7 @@ sudo wget -O /usr/bin/docker-compose "https://github.com/docker/compose/releases
 sudo chmod +x /usr/bin/docker-compose
 
 cd $HOME
-bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/sepolia.sh)
+#bash <(curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/sepolia.sh)
 
 cd $HOME/kroma-up/ && docker-compose --profile validator up -d
 
