@@ -1,8 +1,6 @@
 #!/bin/bash
 
 echo "-----------------------------------------------------------------------------"
-curl -s https://raw.githubusercontent.com/DOUBLE-TOP/tools/main/doubletop.sh | bash
-echo "-----------------------------------------------------------------------------"
 echo "Устанавливаем переменные"
 echo "-----------------------------------------------------------------------------"
 # Запрос и запись значения переменной KROMA_KEY
@@ -61,7 +59,8 @@ KROMA_VALIDATOR__GUARDIAN_ENABLED=false
 KROMA_VALIDATOR__PROVER_GRPC=
 EOF
 
-ip_addr=116.202.115.203
+echo "Enter sepolia RPC without port 58545. Only IP"
+read -r ip_addr
 sed -i "s/L1_RPC_ENDPOINT=.*/L1_RPC_ENDPOINT=http:\/\/$ip_addr:58545/" $HOME/kroma-up/.env
 
 source $HOME/kroma-up/.env
