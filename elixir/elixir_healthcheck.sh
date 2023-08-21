@@ -2,7 +2,7 @@
 
 cd "$HOME" || exit
 
-CONTAINER_ID=$(docker ps -aqf "name=evvv")
+CONTAINER_ID=$(docker ps -aqf "name=ev")
 LINES=20
 
 while true
