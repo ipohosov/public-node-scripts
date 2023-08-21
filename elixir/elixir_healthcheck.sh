@@ -8,7 +8,7 @@ LINES=20
 while true
 do
       echo -e "Check elixir validator logs \n"
-      if docker logs --tail $LINES $CONTAINER_ID | grep -q "Connection closed error"; then
+      if docker logs --tail $LINES $CONTAINER_ID 2>&1 | grep -c "Connection closed error"; then
           echo "Connection closed error found in logs. Restarting container..."
           docker restart $CONTAINER_ID
           echo "Container restarted."
