@@ -1,18 +1,20 @@
 #! /bin/bash
 
-function restart_elixir() {
-    echo -e "Restart elixir ...................................\n"
-    docker restart ev
-}
-
 cd "$HOME" || exit
+
+CONTAINER_ID=$(docker ps -aqf "name=evvv")
+LINES=20
 
 while true
 do
       echo -e "Check elixir validator logs \n"
-      if [ "$(docker logs -f --tail=100 ev 2>&1 | grep -c "Connection closed error")" -gt 0 ]; then
-          restart_elixir
-	    fi
+      if docker logs --tail $LINES $CONTAINER_ID | grep -q "Connection closed error"; then
+          echo "Connection closed error found in logs. Restarting container..."
+          docker restart $CONTAINER_ID
+          echo "Container restarted."
+      else
+          echo "No connection closed errors found in logs."
+      fi
 
       date=$(date +"%H:%M")
       echo "Last Update: ${date}"
