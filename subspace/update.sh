@@ -3,7 +3,7 @@
 
 function get_vars {
   export CHAIN="gemini-3f"
-  export RELEASE="runtime-gemini-3f-2023-aug-21"
+  export RELEASE="gemini-3f-2023-aug-21"
   export SUBSPACE_NODENAME=$(cat $HOME/subspace_docker/docker-compose.yml | grep "\-\-name" | awk -F\" '{print $4}')
   export WALLET_ADDRESS=$(cat $HOME/subspace_docker/docker-compose.yml | grep "\-\-reward-address" | awk -F\" '{print $4}')
   export PLOT_SIZE=$(cat $HOME/subspace_docker/docker-compose.yml | grep "\-\-plot-size" | awk -F\" '{print $4}')
@@ -31,14 +31,13 @@ function eof_docker_compose {
         "--chain", "$CHAIN",
         "--base-path", "/var/subspace",
         "--execution", "wasm",
-        "--blocks-pruning", "archive",
+        "--blocks-pruning", "256",
         "--state-pruning", "archive",
         "--port", "30333",
-        "--unsafe-rpc-external",
         "--dsn-listen-on", "/ip4/0.0.0.0/tcp/30433",
         "--rpc-cors", "all",
-        "--rpc-methods", "safe",
-        "--dsn-disable-private-ips",
+        "--rpc-methods", "unsafe",
+        "--rpc-external",
         "--no-private-ipv4",
         "--validator",
         "--name", "$SUBSPACE_NODENAME",
@@ -61,13 +60,11 @@ function eof_docker_compose {
         - "0.0.0.0:32533:30533"
       restart: unless-stopped
       command: [
-        "--base-path", "/var/subspace",
         "farm",
-        "--disable-private-ips",
         "--node-rpc-url", "ws://node:9944",
         "--listen-on", "/ip4/0.0.0.0/tcp/30533",
         "--reward-address", "$WALLET_ADDRESS",
-        "--plot-size", "100G"
+        "path=/var/subspace,size=100G"
       ]
   volumes:
     node-data:
