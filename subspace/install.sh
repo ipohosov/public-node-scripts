@@ -9,6 +9,7 @@ function install_tools {
     echo "Своп-файл $swapfile не существует или не активен."
     sudo fallocate -l 8G /swapfile
     sudo mkswap /swapfile
+    sudo chmod 600 /swapfile
     sudo swapon /swapfile
   fi
 }
