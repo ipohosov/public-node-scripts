@@ -23,7 +23,6 @@ function wget_pulsar {
 function read_nodename {
   if [ ! $SUBSPACE_NODENAME ]; then
   echo -e "Enter your node name(random name for telemetry)"
-  line
   read SUBSPACE_NODENAME
   export SUBSPACE_NODENAME
   sleep 1
@@ -33,7 +32,6 @@ function read_nodename {
 function read_wallet {
   if [ ! $WALLET_ADDRESS ]; then
   echo -e "Enter your polkadot.js extension address"
-  line
   read WALLET_ADDRESS
   export WALLET_ADDRESS
   sleep 1
@@ -74,10 +72,6 @@ function output_after_install {
 }
 
 function main {
-    colors
-    line
-    logo
-    line
     read_nodename
     read_wallet
     install_tools
