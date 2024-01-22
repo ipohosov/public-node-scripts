@@ -5,7 +5,7 @@ from prettytable import PrettyTable
 
 
 def read_file():
-    with open("./.env", 'r') as file:
+    with open(".env", 'r') as file:
         data = [line.strip() for line in file if not line.startswith("#")]
     return data
 
