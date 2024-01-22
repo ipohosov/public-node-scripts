@@ -23,7 +23,7 @@ def get_deferred_credits(wallet_address) -> list:
 
 def convert_periods(period):
     initial_date = datetime(2024, 1, 15, 10)
-    period_time = 15
+    period_time = 16
     return initial_date + timedelta(seconds=period_time * period)
 
 
@@ -33,7 +33,7 @@ for address in massa_addresses:
     credits.extend(get_deferred_credits(address))
 sorted_credits = sorted(credits, key=lambda d: d['Date'])
 
-table = PrettyTable(['Date', 'Wallet', 'Amount'])
+table = PrettyTable(['Date, UTC', 'Wallet', 'Amount'])
 table.align = "l"
 
 for credit in sorted_credits:
