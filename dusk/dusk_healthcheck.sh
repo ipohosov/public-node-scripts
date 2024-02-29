@@ -13,7 +13,7 @@ while true
 do
   date=$(date +"%H:%M")
   echo "Last Update: ${date}"
-  printf "Check shardeum node status \n"
+  printf "Check Rusk Dusk node status \n"
   nodes=$(get_nodes_count)
   printf "Online nodes: ${nodes}\n"
 
