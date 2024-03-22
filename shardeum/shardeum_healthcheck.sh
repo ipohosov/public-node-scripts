@@ -1,35 +1,17 @@
 #! /bin/bash
 
-function login() {
-    DASHPORT=${1}
-    DASHPASS=${2}
-    TOKEN=$(curl --location --insecure --request POST "https://${IP_ADDRESS}:${DASHPORT}/auth/login" \
-    --header "Content-Type: application/json" \
-    --data-raw '{"password": "'"${DASHPASS}"'"}')
-    access_token=$(echo "${TOKEN}" | jq -r '.accessToken')
-    echo "${access_token}"
-}
-
-
 function get_status() {
     STATUS=$(docker exec -t shardeum-dashboard operator-cli status | grep state | awk '{ print $2 }')
     echo "${STATUS}"
 }
 
-
 function start_node() {
-    TOKEN=${1}
-    DASHPORT=${2}
-    curl --location --insecure --request POST "https://${IP_ADDRESS}:${DASHPORT}/api/node/start" \
-    --header 'Content-Type: application/json' \
-    --header "X-Api-Token: ${TOKEN}"
+    docker exec -t shardeum-dashboard operator-cli start
 }
 
 cd "$HOME" || exit
 source .profile
-IP_ADDRESS=$(wget -qO- http://ipecho.net/plain | xargs echo)
-DASHPASS=$(cat "$HOME"/.shardeum/.env | grep DASHPASS | cut -d= -f2)
-DASHPORT=$(cat "$HOME"/.shardeum/.env | grep DASHPORT | cut -d= -f2)
+
 while true
 do
     printf "Check shardeum node status \n"
@@ -38,8 +20,7 @@ do
     sleep 5s
     if [[ "${NODE_STATUS}" =~ "stopped" ]]; then
         printf "Start shardeum node and wait 5 minutes\n"
-        JWT_TOKEN=$(login "${DASHPORT}" "${DASHPASS}")
-        start_node "${JWT_TOKEN}" "${DASHPORT}"
+        docker exec -t shardeum-dashboard operator-cli start
         sleep 5m
     else
         date=$(date +"%H:%M")
