@@ -5,10 +5,6 @@ function get_status() {
     echo "${STATUS}"
 }
 
-function start_node() {
-    docker exec -t shardeum-dashboard operator-cli start
-}
-
 cd "$HOME" || exit
 source .profile
 
