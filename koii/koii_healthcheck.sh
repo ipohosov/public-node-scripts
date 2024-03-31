@@ -10,9 +10,9 @@ cd "$HOME" || exit
 while true
 do
         echo -e "Check koii task logs \n"
-        if [ "$(docker ps -a | grep task_node | grep Exited)" -gt 0 ]; then
+        if [ "$(docker ps -a | grep -c 'task_node.*Exited')" -gt 0 ]; then
             restart_koii
-        elif [ "$(docker logs --tail=30 task_node 2>&1 | grep -i "FATAL ERROR")" -gt 0 ]; then
+        elif [ "$(docker logs --tail=30 task_node 2>&1 | grep -ci "FATAL ERROR")" -gt 0 ]; then
             restart_koii
 	    fi
 
