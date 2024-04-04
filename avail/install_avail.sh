@@ -9,8 +9,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-read -p "Введите папку для avail" AVAIL_FOLDER
-echo 'Ваш ключ: ' $AVAIL_FOLDER
+AVAIL_FOLDER=".avail1"
 
 # generate folders if missing
 if [ ! -d "$HOME/$AVAIL_FOLDER" ]; then
@@ -250,7 +249,7 @@ RestartSec=3
 LimitNOFILE=65535
 Type=simple
 WorkingDirectory=/root/$AVAIL_FOLDER/bin
-ExecStart=/root/$AVAIL_FOLDER/bin/avail-light --config /root/$AVAIL_FOLDER/config/config.yml --app-id 0 --identity /root/$AVAIL_FOLDER/identity/identity.toml
+ExecStart=/root/$AVAIL_FOLDER/bin/avail-light --config /root/$AVAIL_FOLDER/config/config.yml --app-id 0 --identity /root/$AVAIL_FOLDER/identity/identity.toml --port 38000
 Restart=on-failure
 
 [Install]
