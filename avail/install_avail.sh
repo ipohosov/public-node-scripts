@@ -236,8 +236,8 @@ echo "âœ… Availup exited successfully."
 echo "ðŸ§± Starting Avail."
 trap onexit EXIT
 
-SERVICE_NAME=${$AVAIL_FOLDER#.}
-cat <<EOF | sudo tee /etc/systemd/system/avail.service >/dev/null
+SERVICE_NAME=${AVAIL_FOLDER#.}
+cat <<EOF | sudo tee /etc/systemd/system/$SERVICE_NAME.service >/dev/null
 [Unit]
 Description=Avail Node
 After=network-online.target
@@ -256,5 +256,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable avail
-systemctl start avail
+
+systemctl daemon-reload
+systemctl enable $SERVICE_NAME
+systemctl start $SERVICE_NAME
