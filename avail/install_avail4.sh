@@ -9,7 +9,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-AVAIL_FOLDER=".avail1"
+AVAIL_FOLDER=".avail4"
 
 # generate folders if missing
 if [ ! -d "$HOME/$AVAIL_FOLDER" ]; then
@@ -249,12 +249,15 @@ RestartSec=3
 LimitNOFILE=65535
 Type=simple
 WorkingDirectory=/root/$AVAIL_FOLDER/bin
-ExecStart=/root/$AVAIL_FOLDER/bin/avail-light --config /root/$AVAIL_FOLDER/config/config.yml --app-id 0 --identity /root/$AVAIL_FOLDER/identity/identity.toml --port 38000
+ExecStart=/root/$AVAIL_FOLDER/bin/avail-light --config /root/$AVAIL_FOLDER/config/config.yml --app-id 0 --identity /root/$AVAIL_FOLDER/identity/identity.toml
 Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+echo "http_server_port=7004" >> /root/$AVAIL_FOLDER/config/config.yml
+echo "port=37004" >> /root/$AVAIL_FOLDER/config/config.yml
 
 systemctl daemon-reload
 systemctl enable $SERVICE_NAME
