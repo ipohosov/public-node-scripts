@@ -245,7 +245,7 @@ StartLimitIntervalSec=0
 [Service]
 User=root
 Restart=always
-RestartSec=3
+RestartSec=30
 LimitNOFILE=65535
 Type=simple
 WorkingDirectory=/root/$AVAIL_FOLDER/bin
