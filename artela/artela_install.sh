@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
- wget https://github.com/artela-network/artela/releases/download/v0.4.7-rc6/artelad_0.4.7_rc6_Linux_amd64.tar.gz
- tar -xvf  artelad_0.4.7_rc6_Linux_amd64.tar.gz
+wget https://github.com/artela-network/artela/releases/download/v0.4.7-rc6/artelad_0.4.7_rc6_Linux_amd64.tar.gz
+tar -xvf  artelad_0.4.7_rc6_Linux_amd64.tar.gz
 cp artelad /root/go/bin/
 rm -rf artelad artelad_0.4.7_rc6_Linux_amd64.tar.gz
 
