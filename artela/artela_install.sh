@@ -5,6 +5,8 @@ tar -xvf  artelad_0.4.7_rc6_Linux_amd64.tar.gz
 cp artelad /root/go/bin/
 rm -rf artelad artelad_0.4.7_rc6_Linux_amd64.tar.gz
 
+source .profile
+
 artelad config chain-id artela_11822-1
 artelad config keyring-backend test
 artelad config node tcp://localhost:26657
