@@ -23,7 +23,7 @@ Description=Artela node service
 After=network-online.target
 [Service]
 User=root
-ExecStart=/root/go/bin/artelad start --log_level debug
+ExecStart=/root/go/bin/artelad start
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535
