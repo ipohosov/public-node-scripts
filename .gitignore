@@ -16,3 +16,5 @@ sui/frenemies/mnemonics.txt
 sui/frenemies/wallets.csv
 sui/sui-mint-testnet-2/wallets.txt
 /octobrowser/octo_files/
+zksync/results.json
+zksync/wallets.txt
