@@ -38,5 +38,3 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable titan
 sudo systemctl start titan
-
-\

@@ -12,7 +12,7 @@ def read_file():
 
 def get_deferred_credits(wallet_address) -> list:
     url = f"https://api.massexplo.io/address/{wallet_address}?network=MainNet"
-    deferred_credits = requests.request("GET", url).json().get("deferred_credits")
+    deferred_credits = requests.request("GET", url,verify=False).json().get("deferred_credits")
     agg_credits = []
     for credit in deferred_credits:
         agg_credits.append({"Date": credit.get("slot").get("period"),
